@@ -1,6 +1,5 @@
-image: python:3.7
-
-build:
+backend:
+  image: python:3.7
   only:
     - pushes
   except:
@@ -21,6 +20,22 @@ build:
     - python manage.py migrate
     - python manage.py test
     - pycodestyle --statistics --max-line-length=120 .
+
+frontend:
+  image: node:12.16.1
+  only:
+    - pushes
+  except:
+    - merge_requests
+    - master
+  before_script:
+    - cd frontend
+    - npm install
+    - npm install -g eslint
+  script:
+    - eslint --ext .html,.js,.vue .
+    - npm run test
+
 
 deploy:
   only:
