@@ -19,7 +19,7 @@ class SignInApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -39,7 +39,7 @@ class UserDetailApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
 
     def get(self, request, user_id):
         user = get_user_by(id=user_id)
@@ -58,7 +58,7 @@ class UserUpdateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
 
     def put(self, request, user_id):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -78,7 +78,7 @@ class UserDeactivateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'is_active', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
 
     def delete(self, request, user_id):
         user = get_user_by(id=user_id)
@@ -142,11 +142,12 @@ class UserCreateApi(APIView):
         name = serializers.CharField(required=True, max_length=255)
         email = serializers.CharField(required=True, max_length=255)
         tel = serializers.CharField(required=True, max_length=255)
+        birthday = serializers.DateField(required=True)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'is_active', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'is_active', 'tel', 'created_at', 'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)

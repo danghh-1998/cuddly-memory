@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import App from "@/App";
 import Router from "vue-router";
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import responsive from 'vue-responsive';
+import Vuelidate from 'vuelidate'
+
 
 import {store} from "@/store/store";
 import router from "@/router";
@@ -13,6 +17,11 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 };
 
 Vue.use(Router);
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
+Vue.use(responsive);
+Vue.use(Vuelidate);
+
 
 new Vue({
     render: h => h(App),
