@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
+from django.conf import settings
 
 from .managers import UserManager
 from clients.models import Client
@@ -26,6 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     tel = models.CharField(max_length=255)
+    birthday = models.DateField()
     is_active = models.BooleanField(default=False)
     role = models.SmallIntegerField(choices=USER_TYPE_CHOICES, default=0)
     change_init_password = models.BooleanField(default=False)

@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError, APIException
 from .models import Client
 from users.services import create_user
 from users.services import deactivate_user
+from utils.custom_exceptions import ObjectNotFound
 
 
 def get_super_admin(client):
@@ -11,8 +12,10 @@ def get_super_admin(client):
 
 def create_client(data):
     validated_data = data.copy()
-    client = Client.objects.create(client_name=validated_data.get('client_name'))
+    client = Client.objects.create(client_name=validated_data.get('client_name'),
+                                   address=validated_data.get('address'))
     validated_data.pop('client_name')
+    validated_data.pop('address')
     validated_data['client_id'] = client.id
     create_user(data=validated_data, role=2)
     return client
@@ -21,14 +24,14 @@ def create_client(data):
 def get_client_by(**kwargs):
     client = Client.objects.get(**kwargs)
     if not client:
-        raise APIException(code=200, detail='object not found')
+        raise ObjectNotFound
     return client
 
 
 def get_deleted_client_by(**kwargs):
     client = Client.objects.deleted_only().get(**kwargs)
     if not client:
-        raise APIException(code=200, detail='object not found')
+        raise ObjectNotFound
     return client
 
 

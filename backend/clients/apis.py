@@ -16,13 +16,15 @@ class SignUpApi(APIView):
     class RequestSerializer(serializers.Serializer):
         email = serializers.CharField(required=True, max_length=255)
         client_name = serializers.CharField(required=True, max_length=255)
+        address = serializers.CharField(required=True, max_length=255)
         name = serializers.CharField(required=True, max_length=255)
         tel = serializers.CharField(required=True, max_length=255)
+        birthday = serializers.DateField(required=True)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'is_active', 'created_at', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -42,7 +44,7 @@ class ClientDetailApi(APIView):
 
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'created_at', 'is_active', 'user_num', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'user_num', 'is_active', 'created_at', 'updated_at']
 
     def get(self, request, client_id):
         client = get_client_by(id=client_id)
@@ -62,7 +64,7 @@ class ClientUpdateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'is_active', 'created_at', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
     def put(self, request, client_id):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -82,7 +84,7 @@ class ClientDeactivateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'is_active', 'created_at', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
     def delete(self, request, client_id):
         client = get_client_by(id=client_id)
@@ -100,7 +102,7 @@ class ClientActivateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'is_active', 'created_at', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
     def put(self, request, client_id):
         client = get_deleted_client_by(id=client_id)
@@ -118,7 +120,7 @@ class ClientListUsersApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ('id', 'email', 'name', 'tel', 'role', 'created_at')
+            fields = ['id', 'email', 'name', 'tel', 'birthday', 'role', 'created_at']
 
     def get(self, request, client_id):
         client = get_client_by(id=client_id)

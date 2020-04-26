@@ -5,11 +5,11 @@ import os
 from django.contrib.auth import authenticate
 from django.utils import timezone
 from django.conf import settings
-from rest_framework.exceptions import ValidationError, APIException, AuthenticationFailed
 
 from auth_tokens.services import expire_token, create_token
 from utils.mailers import send_init_pwd, send_reset_pwd_token
 from .models import User
+from utils.custom_exceptions import *
 
 
 def create_user(data, **kwargs):
@@ -18,7 +18,6 @@ def create_user(data, **kwargs):
     init_password = binascii.hexlify(os.urandom(10)).decode()
     data['password'] = init_password
     user = User.objects.create_user(**dict(data))
-    print(init_password)
     send_init_pwd(user=user, password=init_password)
     return user, init_password
 
@@ -73,9 +72,9 @@ def reset_password(data):
         raise ValidationError
     user = get_user_by(reset_password_token=data.get('reset_password_token'))
     if not user:
-        raise APIException('Invalid token')
+        raise InvalidToken
     elif user.reset_password_token_expired_at < timezone.now():
-        raise APIException('Token expired')
+        raise TokenExpired
     user.set_password(data.get('password'))
     user.save(update_fields=['password'])
     return user
@@ -84,24 +83,25 @@ def reset_password(data):
 def authenticate_user(email, password):
     pre_user = get_user_by(email=email)
     if not pre_user.change_init_password:
-        raise APIException('You must change initial password')
+        raise MustChangeInitPassword
     user = authenticate(email=email, password=password)
     if not user:
-        raise AuthenticationFailed
+        raise Unauthenticated
     expire_token(user=user)
     auth_token = create_token(user=user)
     return auth_token
 
 
 def get_user_by(**kwargs):
-    user = User.objects.get(**kwargs)
-    if not user:
-        raise APIException(code=200, detail='object not found')
+    try:
+        user = User.objects.get(**kwargs)
+    except Exception:
+        raise Unauthenticated
     return user
 
 
 def get_deleted_user_by(**kwargs):
     user = User.objects.deleted_only().get(**kwargs)
     if not user:
-        raise APIException(code=200, detail='object not found')
+        raise Unauthenticated
     return user
