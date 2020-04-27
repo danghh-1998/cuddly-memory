@@ -25,5 +25,19 @@ export default {
             .then((res) => {
                 context.commit('changeInitPassword', res)
             })
+    },
+    requestResetPassword: (context, payload) => {
+        context.commit('submit');
+        return api.post('users/req_reset_password', payload)
+            .then((res) => {
+                context.commit('requestResetPassword', res)
+            })
+    },
+    resetPassword: (context, payload) => {
+        context.commit('submit');
+        return api.put('users/reset_password', payload)
+            .then((res) => {
+                context.commit('resetPassword', res)
+            })
     }
 }

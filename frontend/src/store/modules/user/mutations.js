@@ -24,9 +24,19 @@ export default {
         }
     },
     changeInitPassword: (state, payload) => {
-        console.log(payload);
         let code = payload.data.statusCode;
-        if (code === '600' || code === '602'){
+        if (code === '600' || code === '602') {
+            state.status = 'FAILED';
+        } else {
+            state.status = '';
+        }
+    },
+    requestResetPassword: (state, payload) => {
+        state.status = '';
+    },
+    resetPassword: (state, payload) => {
+        let code = payload.data.statusCode;
+        if (code) {
             state.status = 'FAILED';
         } else {
             state.status = '';
