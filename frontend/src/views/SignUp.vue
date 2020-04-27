@@ -174,7 +174,7 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['auth/submit']
+                return this.$store.getters['user/submit']
             }
         },
         validations: {
@@ -226,12 +226,12 @@
                 if (this.$v.form.$anyError) {
                     this.makeToast();
                 } else {
-                    this.$store.dispatch('auth/signUp', snakecaseKeys(this.form))
+                    this.$store.dispatch('user/signUp', snakecaseKeys(this.form))
                     .then(() => {
                         if (this.status === 'FAILED') {
                             this.makeToast();
                             this.resetForm();
-                            this.$store.dispatch('auth/resetStatus');
+                            this.$store.dispatch('user/resetStatus');
                         } else {
                             this.$router.push('/sign-in');
                         }

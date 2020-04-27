@@ -54,7 +54,7 @@
                     <div class="signin-form-forgot">
                         <span>Forgot</span>
                         <router-link
-                            to="/request-reset-password"
+                            to="/req-reset-password"
                             class="signin-form-forgot-link"
                         >
                             Account / Password?
@@ -110,7 +110,7 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['auth/submit']
+                return this.$store.getters['user/submit']
             }
         },
         methods: {
@@ -136,14 +136,14 @@
                 if (this.$v.form.$anyError) {
                     this.makeToast();
                 } else {
-                    this.$store.dispatch('auth/signIn', snakecaseKeys(this.form))
+                    this.$store.dispatch('user/signIn', snakecaseKeys(this.form))
                     .then(() => {
                         if (this.status === 'FAILED') {
                             this.makeToast();
                             this.resetForm();
-                            this.$store.dispatch('auth/resetStatus');
+                            this.$store.dispatch('user/resetStatus');
                         } else {
-                            let user = this.$store.getters['auth/user'];
+                            let user = this.$store.getters['user/user'];
                             if (!user.changeInitPassword){
                                 this.$router.push('/change-init-password')
                             } else {
