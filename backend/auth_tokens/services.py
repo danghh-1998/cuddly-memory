@@ -33,8 +33,6 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             auth_token = AuthToken.objects.get(key=key)
         except AuthToken.DoesNotExist:
             raise AuthenticationFailed
-        if not auth_token.user.is_active:
-            raise AuthenticationFailed
 
         is_expired, auth_token = token_expire_handler(auth_token)
 

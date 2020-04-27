@@ -2,7 +2,6 @@ import binascii
 from datetime import timedelta
 import os
 
-from django.contrib.auth import authenticate
 from django.utils import timezone
 from django.conf import settings
 
@@ -48,7 +47,8 @@ def activate_user(user):
 def change_password(user, data):
     if data.get('password') != data.get('password_confirmation'):
         raise ValidationError
-    authenticate(email=user.email, password=data.get('old_password'))
+    if not user.check_password(raw_password=data.get('old_password')):
+        raise Unauthenticated
     user.set_password(data.get('password'))
     user.change_init_password = True
     user.is_active = True
@@ -81,11 +81,8 @@ def reset_password(data):
 
 
 def authenticate_user(email, password):
-    pre_user = get_user_by(email=email)
-    if not pre_user.change_init_password:
-        raise MustChangeInitPassword
-    user = authenticate(email=email, password=password)
-    if not user:
+    user = get_user_by(email=email)
+    if not user.check_password(raw_password=password):
         raise Unauthenticated
     expire_token(user=user)
     auth_token = create_token(user=user)

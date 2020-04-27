@@ -54,7 +54,7 @@
                     <div class="signin-form-forgot">
                         <span>Forgot</span>
                         <router-link
-                            to=""
+                            to="/request-reset-password"
                             class="signin-form-forgot-link"
                         >
                             Account / Password?
@@ -143,7 +143,12 @@
                             this.resetForm();
                             this.$store.dispatch('auth/resetStatus');
                         } else {
-                            this.$router.push('/');
+                            let user = this.$store.getters['auth/user'];
+                            if (!user.changeInitPassword){
+                                this.$router.push('/change-init-password')
+                            } else {
+                                this.$router.push('/');
+                            }
                         }
                     })
                 }

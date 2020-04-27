@@ -19,7 +19,8 @@ class SignInApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
+                      'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -91,20 +92,22 @@ class UserDeactivateApi(APIView):
 
 
 class UserChangePasswordApi(APIView):
-    permission_classes = [AllowAny, ]
+    permission_classes = [OwnerPermission, ]
 
     class RequestSerializer(serializers.Serializer):
         old_password = serializers.CharField(required=True, max_length=255)
         password = serializers.CharField(required=True, max_length=255)
         password_confirmation = serializers.CharField(required=True, max_length=255)
 
-    def put(self, request, user_id):
+    def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
-        user = get_user_by(id=user_id)
+        user = get_user_by(id=request.user.id)
         self.check_object_permissions(request=request, obj=user)
         change_password(user=user, data=request_serializer.validated_data)
-        return Response(status=status.HTTP_200_OK)
+        return Response({
+
+        }, status=status.HTTP_200_OK)
 
 
 class UserRequestResetPasswordApi(APIView):
@@ -117,7 +120,9 @@ class UserRequestResetPasswordApi(APIView):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
         generate_password_token(data=request_serializer.validated_data)
-        return Response(status=status.HTTP_200_OK)
+        return Response({
+
+        }, status=status.HTTP_200_OK)
 
 
 class UserResetPassword(APIView):
@@ -132,7 +137,9 @@ class UserResetPassword(APIView):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
         reset_password(data=request_serializer.validated_data)
-        return Response(status=status.HTTP_200_OK)
+        return Response({
+
+        }, status=status.HTTP_200_OK)
 
 
 class UserCreateApi(APIView):
