@@ -17,9 +17,9 @@ class Unauthenticated(APIException):
     default_code = '600'
 
 
-class MustChangeInitPassword(APIException):
+class Unauthorized(APIException):
     status_code = 200
-    default_detail = 'User must change init password'
+    default_detail = 'Unauthorized'
     default_code = '601'
 
 

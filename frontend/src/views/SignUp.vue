@@ -136,7 +136,7 @@
         >
             <span class="signup-navigate-text">Have an account?</span>
             <router-link
-                to="/"
+                to="/sign-in"
                 class="signup-navigate-link"
             >
                 Sign in
@@ -233,7 +233,7 @@
                             this.resetForm();
                             this.$store.dispatch('auth/resetStatus');
                         } else {
-                            this.$router.push('/');
+                            this.$router.push('/sign-in');
                         }
                     });
                 }

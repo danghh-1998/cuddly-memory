@@ -1,10 +1,14 @@
 import VueRouter from "vue-router"
 import SignIn from "@/views/SignIn";
 import SignUp from "@/views/SignUp";
+import ChangeInitPassword from "@/views/ChangeInitPassword";
+import Home from "@/views/Home";
 
 let routes = [
-    {path: '/', name: 'sign-in', component: SignIn},
+    {path: '/', name: 'home', component: Home},
+    {path: '/sign-in', name: 'sign-in', component: SignIn},
     {path: '/sign-up', name: 'sign-up', component: SignUp},
+    {path: '/change-init-password', name: 'change-init-password', component: ChangeInitPassword}
 ];
 
 const router = new VueRouter({mode: 'history', routes});
