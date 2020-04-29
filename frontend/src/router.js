@@ -7,12 +7,39 @@ import RequestResetPassword from "@/views/RequestResetPassword";
 import ResetPassword from "@/views/ResetPassword";
 
 let routes = [
-    {path: '/', name: 'home', component: Home},
-    {path: '/sign-in', name: 'sign-in', component: SignIn},
-    {path: '/sign-up', name: 'sign-up', component: SignUp},
-    {path: '/change-init-password', name: 'change-init-password', component: ChangeInitPassword},
-    {path: '/req-reset-password', name: 'req-reset-password', component: RequestResetPassword},
-    {path: '/reset-password', name: 'reset-password', component: ResetPassword}
+    {
+        path: '/',
+        name: 'home',
+        component: Home,
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '/sign-in',
+        name: 'sign-in',
+        component: SignIn
+    },
+    {
+        path: '/sign-up',
+        name: 'sign-up',
+        component: SignUp
+    },
+    {
+        path: '/change-init-password',
+        name: 'change-init-password',
+        component: ChangeInitPassword
+    },
+    {
+        path: '/req-reset-password',
+        name: 'req-reset-password',
+        component: RequestResetPassword
+    },
+    {
+        path: '/reset-password',
+        name: 'reset-password',
+        component: ResetPassword
+    }
 ];
 
 const router = new VueRouter({mode: 'history', routes});

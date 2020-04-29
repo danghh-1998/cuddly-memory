@@ -39,7 +39,7 @@ frontend:
 
 deploy:
   only:
-    - master
+    - pushes
   before_script:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh

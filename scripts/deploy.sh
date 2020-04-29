@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
 
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+NO_COLOR="\033[0m"
+
+colored_print(){
+    echo -e "$1 $2 $NO_COLOR"
+}
+
+colored_print ${GREEN} "STEP 1: Pull changes from origin [default master]"
+
 eval $(ssh-agent -s)
+colored_print ${GREEN} "STEP 1.1: Check if repository exists"
 if [ -d "7_trinhvt" ]; then
-  cd 7_trinhvt
-  git pull origin master
+    colored_print ${GREEN} "STEP 1.1.1: Repository found in $(pwd)/7_trinhvt"
+    cd 7_trinhvt
+    git pull origin origin/danghh_6
+    git checkout danghh_6
 else
-  git clone "git@gitlab.com:is_soict/it4434_20192/7_trinhvt.git"
-  cd 7_trinhvt
+    colored_print ${RED} "STEP 1.1.1: Not found"
+    git clone git@gitlab.com:is_soict/it4434_20192/7_trinhvt.git
+    cd 7_trinhvt
 fi
 
-CURRENT_TIME=$(date +%Y-%m-%d__%H_%M_%S)
-LOG_FILE=/tmp/project/project.uwsgi.log
-[ -f ${LOG_FILE} ] && mv ${LOG_FILE} /tmp/project/project.uwsgi.${CURRENT_TIME}.log
-
-MASTER_PROCESS=$(ps aux | grep uwsgi | grep -v grep | awk '{print $2}' | head -n 1)
-[ ${MASTER_PROCESS} ] && kill -9 ${MASTER_PROCESS}
-
-cd backend
-whoami
-pwd
-/home/deploy/anaconda3/envs/project/bin/uwsgi project.ini
+source ~/7_trinhvt/script/aio.sh
