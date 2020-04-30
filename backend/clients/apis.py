@@ -44,8 +44,8 @@ class ClientDetailApi(APIView):
             model = Client
             fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
-    def get(self, request):
-        client = get_client_by(id=request.user.client.id)
+    def get(self, request, client_id):
+        client = get_client_by(id=client_id)
         self.check_object_permissions(request=request, obj=client)
         response_serializer = self.ResponseSerializer(client)
         return Response({

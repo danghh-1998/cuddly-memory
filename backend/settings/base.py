@@ -17,7 +17,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 APP_NAME = 'rest boilerplate'
-
+DEBUG = False
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,7 +30,8 @@ INSTALLED_APPS = [
 
     'users',
     'auth_tokens',
-    'clients'
+    'clients',
+    'folders',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'utils', 'fixtures')
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
