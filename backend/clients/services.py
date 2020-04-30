@@ -1,9 +1,6 @@
-from rest_framework.exceptions import ValidationError, APIException
-
 from .models import Client
-from users.services import create_user
-from users.services import deactivate_user
-from utils.custom_exceptions import ObjectNotFound
+from users.services import create_user, deactivate_user, get_user_by
+from utils.custom_exceptions import *
 
 
 def get_super_admin(client):
@@ -12,6 +9,9 @@ def get_super_admin(client):
 
 def create_client(data):
     validated_data = data.copy()
+    user = get_user_by(email=data.get('email'))
+    if user:
+        raise DuplicateEntry(entry=user.email, key='email')
     client = Client.objects.create(client_name=validated_data.get('client_name'),
                                    address=validated_data.get('address'))
     validated_data.pop('client_name')

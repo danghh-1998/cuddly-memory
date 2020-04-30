@@ -2,6 +2,7 @@ from django.db import models
 from safedelete.models import SafeDeleteModel, SOFT_DELETE
 
 from .managers import ClientManager
+from utils.custom_exceptions import *
 
 
 class Client(SafeDeleteModel):
@@ -18,6 +19,15 @@ class Client(SafeDeleteModel):
     class Meta:
         app_label = 'clients'
         db_table = 'client'
+
+    def clean(self):
+        client = Client.objects.filter(client_name=self.client_name).first()
+        if client:
+            raise DuplicateEntry(entry=client.client_name, key='client_name')
+
+    def save(self, keep_deleted=False, **kwargs):
+        self.clean()
+        super().save(keep_deleted=False, **kwargs)
 
     def __str__(self):
         return self.client_name

@@ -46,7 +46,7 @@ def activate_user(user):
 
 def change_password(user, data):
     if data.get('password') != data.get('password_confirmation'):
-        raise ValidationError
+        raise ValidationError('Password and password confirmation do not match')
     if not user.check_password(raw_password=data.get('old_password')):
         raise Unauthenticated
     user.set_password(data.get('password'))
