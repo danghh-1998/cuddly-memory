@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
-from django.conf import settings
 
 from .managers import UserManager
 from clients.models import Client
+from utils.custom_exceptions import *
 
 
 class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
@@ -42,6 +42,15 @@ class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
     class Meta:
         app_label = 'users'
         db_table = 'user'
+
+    def clean(self):
+        user = User.objects.filter(email=self.email).first()
+        if user:
+            raise DuplicateEntry(entry=user.email, key='email')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
 
     @property
     def full_name(self):
