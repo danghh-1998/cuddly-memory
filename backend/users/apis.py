@@ -40,10 +40,11 @@ class UserDetailApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
+                      'updated_at']
 
-    def get(self, request, user_id):
-        user = get_user_by(id=user_id)
+    def get(self, request):
+        user = get_user_by(id=request.user.id)
         self.check_object_permissions(request, obj=user)
         response_serializer = self.ResponseSerializer(user)
         return Response({'user': response_serializer.data})
@@ -59,12 +60,13 @@ class UserUpdateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
+                      'updated_at']
 
-    def put(self, request, user_id):
+    def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
-        user = get_user_by(id=user_id)
+        user = get_user_by(id=request.user.id)
         self.check_object_permissions(request=request, obj=user)
         user = update_user(data=request_serializer.validated_data, user=user)
         response_serializer = self.ResponseSerializer(user)
@@ -79,10 +81,11 @@ class UserDeactivateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
+                      'updated_at']
 
-    def delete(self, request, user_id):
-        user = get_user_by(id=user_id)
+    def delete(self, request):
+        user = get_user_by(id=request.user.id)
         self.check_object_permissions(request=request, obj=user)
         user = deactivate_user(user)
         response_serializer = self.ResponseSerializer(user)
@@ -154,14 +157,17 @@ class UserCreateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'is_active', 'tel', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
+                      'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
         self.check_permissions(request=request)
         client = request.user.client
-        user = create_user(data=request_serializer.validated_data, role=0, client=client)
+        sub_user_role = request.user.role - 1
+        user, _ = create_user(data=request_serializer.validated_data, role=sub_user_role, client=client,
+                              admin=request.user)
         response_serializer = self.ResponseSerializer(user)
         return Response({
             'user': response_serializer.data

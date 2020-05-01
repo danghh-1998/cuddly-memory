@@ -4,7 +4,6 @@ from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
 
 from .managers import UserManager
 from clients.models import Client
-from utils.custom_exceptions import *
 
 
 class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
@@ -34,6 +33,8 @@ class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
     reset_password_token = models.CharField(max_length=255)
     reset_password_token_expired_at = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(Client, related_name='users', on_delete=models.SET_NULL, unique=False, null=True)
+    admin = models.ForeignKey('self', related_name='sub_users', on_delete=models.SET_NULL, unique=False, null=True,
+                              default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,15 +43,6 @@ class User(AbstractBaseUser, PermissionsMixin, SafeDeleteModel):
     class Meta:
         app_label = 'users'
         db_table = 'user'
-
-    def clean(self):
-        user = User.objects.filter(email=self.email).first()
-        if user:
-            raise DuplicateEntry(entry=user.email, key='email')
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        return super().save(*args, **kwargs)
 
     @property
     def full_name(self):

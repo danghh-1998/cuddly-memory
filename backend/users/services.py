@@ -14,6 +14,9 @@ from utils.custom_exceptions import *
 def create_user(data, **kwargs):
     for key, value in kwargs.items():
         data[key] = value
+    user = get_user_by(email=data['email'], raise_exception=False)
+    if user:
+        raise DuplicateEntry(entry=user.email, key='email')
     init_password = binascii.hexlify(os.urandom(10)).decode()
     data['password'] = init_password
     user = User.objects.create_user(**dict(data))
@@ -53,6 +56,7 @@ def change_password(user, data):
     user.change_init_password = True
     user.is_active = True
     user.save(update_fields=['password', 'change_init_password', 'is_active'])
+    expire_token(user=user)
     return user
 
 
@@ -89,16 +93,11 @@ def authenticate_user(email, password):
     return auth_token
 
 
-def get_user_by(**kwargs):
-    try:
-        user = User.objects.get(**kwargs)
-    except Exception:
-        raise Unauthenticated
-    return user
-
-
-def get_deleted_user_by(**kwargs):
-    user = User.objects.deleted_only().get(**kwargs)
-    if not user:
+def get_user_by(raise_exception=True, only_deleted=False, **kwargs):
+    if only_deleted:
+        user = User.objects.deleted_only().filter(**kwargs).first()
+    else:
+        user = User.objects.filter(**kwargs).first()
+    if not user and raise_exception:
         raise Unauthenticated
     return user
