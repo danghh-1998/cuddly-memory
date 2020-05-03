@@ -40,14 +40,12 @@ class ClientDetailApi(APIView):
     permission_classes = [SuperAdminPermission, ]
 
     class ResponseSerializer(serializers.ModelSerializer):
-        user_num = serializers.ReadOnlyField()
-
         class Meta:
             model = Client
-            fields = ['id', 'client_name', 'address', 'user_num', 'is_active', 'created_at', 'updated_at']
+            fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
-    def get(self, request, client_id):
-        client = get_client_by(id=client_id)
+    def get(self, request):
+        client = get_client_by(id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         response_serializer = self.ResponseSerializer(client)
         return Response({
@@ -66,10 +64,10 @@ class ClientUpdateApi(APIView):
             model = Client
             fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
-    def put(self, request, client_id):
+    def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
-        client = get_client_by(id=client_id)
+        client = get_client_by(id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         client = update_client(client=client, data=request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(client)
@@ -86,8 +84,8 @@ class ClientDeactivateApi(APIView):
             model = Client
             fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
-    def delete(self, request, client_id):
-        client = get_client_by(id=client_id)
+    def delete(self, request):
+        client = get_client_by(id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         client = deactivate_client(client=client)
         response_serializer = self.ResponseSerializer(client)
@@ -104,8 +102,8 @@ class ClientActivateApi(APIView):
             model = Client
             fields = ['id', 'client_name', 'address', 'is_active', 'created_at', 'updated_at']
 
-    def put(self, request, client_id):
-        client = get_deleted_client_by(id=client_id)
+    def put(self, request):
+        client = get_client_by(only_deleted=False, id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         client = activate_client(client=client)
         response_serializer = self.ResponseSerializer(client)
@@ -120,13 +118,13 @@ class ClientListUsersApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'email', 'name', 'tel', 'birthday', 'role', 'created_at']
+            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'created_at', 'updated_at']
 
-    def get(self, request, client_id):
-        client = get_client_by(id=client_id)
+    def get(self, request):
+        client = get_client_by(id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         users = list(client.users.all())
         response_serializer = self.ResponseSerializer(users, many=True)
         return Response({
-            'user': response_serializer.data
+            'users': response_serializer.data
         }, status=status.HTTP_200_OK)

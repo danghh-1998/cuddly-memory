@@ -9,11 +9,14 @@ def get_super_admin(client):
 
 def create_client(data):
     validated_data = data.copy()
-    user = get_user_by(email=data.get('email'))
+    user = get_user_by(email=data.get('email'), raise_exception=False)
     if user:
         raise DuplicateEntry(entry=user.email, key='email')
-    client = Client.objects.create(client_name=validated_data.get('client_name'),
-                                   address=validated_data.get('address'))
+    client_name = validated_data.get('client_name')
+    client = get_client_by(client_name=client_name, raise_exception=False)
+    if client:
+        raise DuplicateEntry(entry=client_name, key='client_name')
+    client = Client.objects.create(client_name=client_name, address=validated_data.get('address'))
     validated_data.pop('client_name')
     validated_data.pop('address')
     validated_data['client_id'] = client.id
@@ -21,16 +24,12 @@ def create_client(data):
     return client
 
 
-def get_client_by(**kwargs):
-    client = Client.objects.get(**kwargs)
-    if not client:
-        raise ObjectNotFound
-    return client
-
-
-def get_deleted_client_by(**kwargs):
-    client = Client.objects.deleted_only().get(**kwargs)
-    if not client:
+def get_client_by(raise_exception=True, only_deleted=False, **kwargs):
+    if only_deleted:
+        client = Client.objects.deleted_only().filter(**kwargs).first()
+    else:
+        client = Client.objects.filter(**kwargs).first()
+    if not client and raise_exception:
         raise ObjectNotFound
     return client
 
