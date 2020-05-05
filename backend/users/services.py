@@ -9,6 +9,7 @@ from auth_tokens.services import expire_token, create_token
 from utils.mailers import send_init_pwd, send_reset_pwd_token
 from .models import User
 from utils.custom_exceptions import *
+from folders.services import create_folder
 
 
 def create_user(data, **kwargs):
@@ -20,6 +21,10 @@ def create_user(data, **kwargs):
     init_password = binascii.hexlify(os.urandom(10)).decode()
     data['password'] = init_password
     user = User.objects.create_user(**dict(data))
+    if user.role == 1:
+        create_folder(data={
+            'name': '/',
+        }, user=user, folder_type=1)
     send_init_pwd(user=user, password=init_password)
     return user, init_password
 

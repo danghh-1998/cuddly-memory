@@ -1,0 +1,366 @@
+- model: clients.client
+  pk: 1
+  fields:
+    deleted: null
+    client_name: client_1
+    address: Vietnam
+    is_active: true
+    created_at: 2020-05-05 02:45:08.351682+00:00
+    updated_at: 2020-05-05 02:45:08.351709+00:00
+- model: clients.client
+  pk: 2
+  fields:
+    deleted: null
+    client_name: client_2
+    address: Vietnam
+    is_active: true
+    created_at: 2020-05-05 03:01:56.399252+00:00
+    updated_at: 2020-05-05 03:01:56.399281+00:00
+- model: users.user
+  pk: 1
+  fields:
+    password: pbkdf2_sha256$180000$NGl7D2k1G8dy$oGQhTqeBXC5qAKjrUdg0xKatRsL72b7Ew/c6QT8F7ec=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: super_admin@client1.com
+    name: Super admin 1
+    tel: 0123456789
+    birthday: 2019-12-12
+    is_active: true
+    role: 2
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:45:08.446359+00:00
+    client: 1
+    admin: null
+    created_at: 2020-05-05 02:45:08.446403+00:00
+    updated_at: 2020-05-05 02:45:08.446414+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 2
+  fields:
+    password: pbkdf2_sha256$180000$YbGnkU1Sv6KK$Xa4RpfmNX4WomYYyZlrKAnZXzRupb0UPVomMrpolXg4=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: admin_1@client1.com
+    name: Admin 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 1
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:47:14.078252+00:00
+    client: 1
+    admin: 1
+    created_at: 2020-05-05 02:47:14.078289+00:00
+    updated_at: 2020-05-05 02:47:14.078299+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 3
+  fields:
+    password: pbkdf2_sha256$180000$gvmbQYfF4JCX$CEAQkCdPQPLDW5eFjhHQOhqtWtRIqwCNZxuyI5Jww1o=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: admin_2@client1.com
+    name: Admin 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 1
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:48:36.456007+00:00
+    client: 1
+    admin: 1
+    created_at: 2020-05-05 02:48:36.456063+00:00
+    updated_at: 2020-05-05 02:48:36.456082+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 4
+  fields:
+    password: pbkdf2_sha256$180000$QrbiJcspW8QP$45+nofkK3jnQY7UffmihXK1QnWmMEXjk+SzmUePdPGc=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_1_1@client1.com
+    name: User 1 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:54:23.477499+00:00
+    client: 1
+    admin: 2
+    created_at: 2020-05-05 02:54:23.477559+00:00
+    updated_at: 2020-05-05 02:54:23.477570+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 5
+  fields:
+    password: pbkdf2_sha256$180000$e4HksfuyFUt4$Uz7BUA2MAdGv2ye/bROyuLiwqkl6rjvuyiF67lR6620=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_1_2@client1.com
+    name: User 1 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:58:14.155505+00:00
+    client: 1
+    admin: 2
+    created_at: 2020-05-05 02:58:14.155553+00:00
+    updated_at: 2020-05-05 02:58:14.155565+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 6
+  fields:
+    password: pbkdf2_sha256$180000$r2MPhWiGusTq$V6A8k/hcw/4PlbPV+5AGuM+AJPDkBOexsyQgcIKGlOY=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_2_1@client1.com
+    name: User 2 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 02:59:43.764609+00:00
+    client: 1
+    admin: 3
+    created_at: 2020-05-05 02:59:43.764653+00:00
+    updated_at: 2020-05-05 02:59:43.764665+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 7
+  fields:
+    password: pbkdf2_sha256$180000$Agp5gpNzxPTN$hPwm3CDM5yyhcoN0GaVk1GGfzI4cBP6KvzYZOl1xN7E=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_2_2@client1.com
+    name: User 2 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:00:45.175495+00:00
+    client: 1
+    admin: 3
+    created_at: 2020-05-05 03:00:45.175536+00:00
+    updated_at: 2020-05-05 03:00:45.175547+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 8
+  fields:
+    password: pbkdf2_sha256$180000$8DKhU3eUkyJT$us/zPRoLGpjds6J+6vRBk3ghAMZrfhn0TtwYXhXHgGs=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: super_admin@client2.com
+    name: Super admin 2
+    tel: 0123456789
+    birthday: 2019-12-12
+    is_active: true
+    role: 2
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:01:56.499405+00:00
+    client: 2
+    admin: null
+    created_at: 2020-05-05 03:01:56.499453+00:00
+    updated_at: 2020-05-05 03:01:56.499464+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 9
+  fields:
+    password: pbkdf2_sha256$180000$8ztRirLoMBTb$S/U8SwTZln9QhCjNMn40bynC54PbGfiq9O+lsprvuZw=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: admin_1@client2.com
+    name: Admin 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 1
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:03:44.469402+00:00
+    client: 2
+    admin: 8
+    created_at: 2020-05-05 03:03:44.469437+00:00
+    updated_at: 2020-05-05 03:03:44.469447+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 10
+  fields:
+    password: pbkdf2_sha256$180000$FseCvOc6pYVe$hKbceqC/XqmRXk3A9UGGv84dyrNkQsjOX0pGLDIxeek=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: admin_2@client2.com
+    name: Admin 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 1
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:04:03.285378+00:00
+    client: 2
+    admin: 8
+    created_at: 2020-05-05 03:04:03.285420+00:00
+    updated_at: 2020-05-05 03:04:03.285432+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 11
+  fields:
+    password: pbkdf2_sha256$180000$dPQMob4cGKkR$M0BSIEs2bOy/yYQ6aL1AYicE8pgBpV7D5nHRy8HE2bA=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_1_1@client2.com
+    name: User 1 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:06:51.707632+00:00
+    client: 2
+    admin: 9
+    created_at: 2020-05-05 03:06:51.707665+00:00
+    updated_at: 2020-05-05 03:06:51.707675+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$180000$lFWVQKBeDqQR$WNt/2nWzHCSBnMZ0wAwMR0Lo1LCMdEpN9klHsa6wtSg=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_1_2@client2.com
+    name: User 1 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:07:52.035699+00:00
+    client: 2
+    admin: 9
+    created_at: 2020-05-05 03:07:52.035739+00:00
+    updated_at: 2020-05-05 03:07:52.035751+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 13
+  fields:
+    password: pbkdf2_sha256$180000$Cb4n6rJhTZpL$uLjxTQXj8IjbaVfTAdPOaKL3NThbvf8x62fJDoTPRvo=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_2_1@client2.com
+    name: User 2 1
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:09:24.637035+00:00
+    client: 2
+    admin: 10
+    created_at: 2020-05-05 03:09:24.637073+00:00
+    updated_at: 2020-05-05 03:09:24.637083+00:00
+    groups: []
+    user_permissions: []
+- model: users.user
+  pk: 14
+  fields:
+    password: pbkdf2_sha256$180000$ZoRgJW9roZ5A$8NzBc+z6QoS/w/blU+BTM82DlZfEQfyCUa+tEbNdH2Y=
+    last_login: null
+    is_superuser: false
+    deleted: null
+    email: user_2_2@client2.com
+    name: User 2 2
+    tel: 0123456789
+    birthday: 1998-12-29
+    is_active: true
+    role: 0
+    change_init_password: true
+    reset_password_token: ''
+    reset_password_token_expired_at: 2020-05-05 03:09:33.476646+00:00
+    client: 2
+    admin: 10
+    created_at: 2020-05-05 03:09:33.476678+00:00
+    updated_at: 2020-05-05 03:09:33.476688+00:00
+    groups: []
+    user_permissions: []
+- model: folders.folder
+  pk: 1
+  fields:
+    deleted: null
+    name: /
+    folder_type: 1
+    created_at: 2020-05-05 02:45:08.468397+00:00
+    updated_at: 2020-05-05 02:45:08.468420+00:00
+    parent_folder: null
+    user: 2
+- model: folders.folder
+  pk: 2
+  fields:
+    deleted: null
+    name: /
+    folder_type: 1
+    created_at: 2020-05-05 03:01:56.523379+00:00
+    updated_at: 2020-05-05 03:01:56.523404+00:00
+    parent_folder: null
+    user: 3
+- model: folders.folder
+  pk: 3
+  fields:
+    deleted: null
+    name: /
+    folder_type: 1
+    created_at: 2020-05-05 03:01:56.523379+00:00
+    updated_at: 2020-05-05 03:01:56.523404+00:00
+    parent_folder: null
+    user: 9
+- model: folders.folder
+  pk: 4
+  fields:
+    deleted: null
+    name: /
+    folder_type: 1
+    created_at: 2020-05-05 03:01:56.523379+00:00
+    updated_at: 2020-05-05 03:01:56.523404+00:00
+    parent_folder: null
+    user: 10

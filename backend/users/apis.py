@@ -43,8 +43,8 @@ class UserDetailApi(APIView):
             fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
                       'updated_at']
 
-    def get(self, request):
-        user = get_user_by(id=request.user.id)
+    def get(self, request, user_id):
+        user = get_user_by(id=user_id)
         self.check_object_permissions(request, obj=user)
         response_serializer = self.ResponseSerializer(user)
         return Response({'user': response_serializer.data})
