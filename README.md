@@ -2,7 +2,7 @@
 
 > Đồ án các công nghệ xây dựng hệ thống thông tin, trường đại học Bách Khoa Hà Nội
 
-[![Requirements Status](https://img.shields.io/requires/github/danghh-1998/symmetrical-happiness)](https://img.shields.io/requires/github/danghh-1998/symmetrical-happiness) ![Languages](https://img.shields.io/github/languages/count/danghh-1998/symmetrical-happiness)  ![Top language](https://img.shields.io/github/languages/top/danghh-1998/symmetrical-happiness)  ![Code quality](https://img.shields.io/codefactor/grade/github/danghh-1998/symmetrical-happiness/master)
+[![Requirements Status](https://requires.io/github/danghh-1998/cuddly-memory/requirements.svg?branch=master)](https://requires.io/github/danghh-1998/cuddly-memory/requirements/?branch=master) ![Languages](https://img.shields.io/github/languages/count/danghh-1998/cuddly-memory)  ![Top language](https://img.shields.io/github/languages/top/danghh-1998/cuddly-memory)  [![CodeFactor](https://www.codefactor.io/repository/github/danghh-1998/cuddly-memory/badge/master)](https://www.codefactor.io/repository/github/danghh-1998/cuddly-memory/overview/master)
 
 ---
 

@@ -1,5 +1,5 @@
 asgiref==3.2.7
-astroid==2.4.0
+astroid==2.4.1
 certifi==2020.4.5.1
 Django==3.0.6
 django-cors-headers==3.2.1
@@ -17,7 +17,7 @@ olefile==0.46
 pep8==1.7.1
 Pillow==7.1.2
 pycodestyle==2.5.0
-pylint==2.5.0
+pylint==2.5.2
 python-http-client==3.2.7
 pytz==2020.1
 PyYAML==5.3.1
