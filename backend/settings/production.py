@@ -24,3 +24,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+UPLOAD_FILE_DIR = os.environ.get('UPLOAD_FILE_DIR')
