@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'auth_tokens',
     'clients',
     'folders',
+    'templates',
+    'bounding_boxes'
 ]
 
 MIDDLEWARE = [

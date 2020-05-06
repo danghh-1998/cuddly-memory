@@ -6,6 +6,7 @@ from rest_framework import status
 from .services import *
 from .models import Folder
 from .permissions import *
+from templates.models import Template
 
 
 class FolderDetailApi(APIView):
@@ -17,11 +18,17 @@ class FolderDetailApi(APIView):
                 model = Folder
                 fields = ['id', 'name', 'created_at', 'updated_at']
 
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                exclude = ['deleted', 'folder']
+
         sub_folders = FolderSerializer(many=True)
+        templates = TemplateSerializer(many=True)
 
         class Meta:
             model = Folder
-            fields = ['id', 'name', 'created_at', 'updated_at', 'sub_folders']
+            fields = ['id', 'name', 'created_at', 'updated_at', 'sub_folders', 'templates']
 
     def get(self, request, folder_id):
         folder = get_folder_or_root(user=request.user, folder_id=folder_id)

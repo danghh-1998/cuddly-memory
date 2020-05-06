@@ -22,6 +22,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+UPLOAD_FILE_DIR = env('UPLOAD_FILE_DIR')
+
 INTERNAL_IPS = [
     '127.0.0.1',
     '0.0.0.0'
