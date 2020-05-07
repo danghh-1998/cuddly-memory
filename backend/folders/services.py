@@ -14,9 +14,13 @@ def list_template_name(folder):
     return list(map(lambda template: template.display_name, folder.templates.all()))
 
 
-def create_folder(data, user, folder_type=0):
-    parent_folder_id = data.get('parent_folder_id')
-    name = data.get('name')
+def has_sub_folder_or_template(folder):
+    return list(folder.templates.all()) or list(folder.sub_folders.all())
+
+
+def create_folder(user, folder_type=0, **kwargs):
+    parent_folder_id = kwargs.get('parent_folder_id')
+    name = kwargs.get('name')
     parent_folder = get_root_folder(user=user) if list(user.folders.all()) else None
     if parent_folder_id:
         parent_folder = user.folders.filter(id=parent_folder_id).first()
@@ -28,15 +32,48 @@ def create_folder(data, user, folder_type=0):
     return Folder.objects.create(name=name, parent_folder=parent_folder, user=user, folder_type=folder_type)
 
 
-def update_folder(data, folder):
+def update_folder(folder, **kwargs):
+    if not any(kwargs.values()):
+        raise ValidationError
     if folder.folder_type == 1:
         return folder
-    name = data.get('name')
-    sibling_names = list_sub_folder_name(folder.parent_folder)
+    name = kwargs.get('name')
+    folder_id = kwargs.get('folder_id')
+    new_parent_folder = get_folders_by(id=folder_id).first() if folder_id else folder.parent_folder
+    if new_parent_folder.user != folder.parent_folder.user:
+        raise Unauthorized
+    if name:
+        sibling_names = list_sub_folder_name(new_parent_folder)
+        if name in sibling_names:
+            raise DuplicateEntry(entry=name, key='name')
+        folder.name = name
+        folder.save(update_fields=['name'])
+    folder.parent_folder = new_parent_folder
+    folder.save(update_fields=['parent_folder_id'])
+    return folder
+
+
+def duplicate_folder(folder, **kwargs):
+    from templates.services import duplicate_template
+    if folder.folder_type == 1:
+        return folder
+    name = kwargs.get('name')
+    folder_id = kwargs.get('folder_id')
+    new_parent_folder = get_folders_by(id=folder_id).first() if folder_id else folder.parent_folder
+    if new_parent_folder.user != folder.parent_folder.user:
+        raise Unauthorized
+    sibling_names = list_sub_folder_name(new_parent_folder)
     if name in sibling_names:
         raise DuplicateEntry(entry=name, key='name')
+    sub_folders = folder.sub_folders.all()
+    templates = folder.templates.all()
+    folder.id = None
     folder.name = name
-    folder.save(update_fields=['name'])
+    folder.save()
+    for sub_folder in sub_folders:
+        duplicate_folder(folder=sub_folder, folder_id=folder.id, name=sub_folder.name)
+    for template in templates:
+        duplicate_template(template=template, folder_id=folder.id, name=template.display_name)
     return folder
 
 

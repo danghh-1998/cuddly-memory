@@ -8,7 +8,7 @@ class AdminPermission(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         current_user = request.user
-        return obj.folder.user == current_user
+        return obj.user == current_user
 
 
 class UserPermission(BasePermission):
@@ -17,9 +17,3 @@ class UserPermission(BasePermission):
         owner = obj.user
         access_users = [*list(owner.sub_users.all()), owner]
         return current_user in access_users
-
-
-class OwnerPermission(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        current_user = request.user
-        return current_user == obj.user
