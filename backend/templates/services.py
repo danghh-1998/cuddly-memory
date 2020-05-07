@@ -58,21 +58,27 @@ def update_template(template, **kwargs):
         template.save(update_fields=['display_name'])
     if folder_id:
         template.folder = folder
-        template.save(update_fields=['folder'])
+        template.save(update_fields=['folder_id'])
     return template
 
 
 def duplicate_template(template, **kwargs):
-    bounding_boxes = template.bounding_boxes.all()
-    sibling_name = list_template_name(template.folder)
+    folder_id = kwargs.get('folder_id')
     name = kwargs.get('name')
+    folder = get_folders_by(id=folder_id).first() if folder_id else template.folder
+    if folder.user != template.folder.user:
+        raise Unauthorized
+    sibling_name = list_template_name(folder=folder)
     if name in sibling_name:
         raise DuplicateEntry(entry=name, key='name')
+    bounding_boxes = template.bounding_boxes.all()
     template.pk = None
     template.display_name = name
+    template.folder = folder
     template.save()
     for bounding_box in bounding_boxes:
         bounding_box.id = None
+        bounding_box.template = template
         bounding_box.save()
     return template
 

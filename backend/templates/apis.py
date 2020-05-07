@@ -133,6 +133,7 @@ class TemplateDuplicateApi(APIView):
 
     class RequestSerializer(serializers.Serializer):
         name = serializers.CharField(max_length=255, required=True)
+        folder_id = serializers.IntegerField(required=False)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class BoundingBoxSerializer(serializers.ModelSerializer):

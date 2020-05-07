@@ -28,7 +28,7 @@ class FolderDetailApi(APIView):
 
         class Meta:
             model = Folder
-            fields = ['id', 'name', 'created_at', 'updated_at', 'sub_folders', 'templates']
+            fields = ['id', 'name', 'parent_folder', 'created_at', 'updated_at', 'sub_folders', 'templates']
 
     def get(self, request, folder_id):
         folder = get_folder_or_root(user=request.user, folder_id=folder_id)
@@ -47,15 +47,28 @@ class FolderCreateApi(APIView):
         parent_folder_id = serializers.IntegerField(default=None)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class FolderSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Folder
+                fields = ['id', 'name', 'created_at', 'updated_at']
+
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                exclude = ['deleted']
+
+        sub_folders = FolderSerializer(many=True)
+        templates = TemplateSerializer(many=True)
+
         class Meta:
             model = Folder
-            fields = ['id', 'name', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'parent_folder', 'created_at', 'updated_at', 'sub_folders', 'templates']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
         self.check_permissions(request=request)
-        folder = create_folder(data=request_serializer.validated_data, user=request.user)
+        folder = create_folder(user=request.user, **request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(folder)
         return Response({
             'folder': response_serializer.data
@@ -63,22 +76,73 @@ class FolderCreateApi(APIView):
 
 
 class FolderUpdateApi(APIView):
-    permission_classes = [OwnerPermission, ]
+    permission_classes = [AdminPermission, ]
 
     class RequestSerializer(serializers.Serializer):
-        name = serializers.CharField(max_length=255, required=True)
+        name = serializers.CharField(max_length=255, required=False)
+        folder_id = serializers.IntegerField(required=False)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class FolderSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Folder
+                fields = ['id', 'name', 'created_at', 'updated_at']
+
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                exclude = ['deleted', 'folder']
+
+        sub_folders = FolderSerializer(many=True)
+        templates = TemplateSerializer(many=True)
+
         class Meta:
             model = Folder
-            fields = ['id', 'name', 'created_at', 'updated_at']
+            fields = ['id', 'name', 'parent_folder', 'created_at', 'updated_at', 'sub_folders', 'templates']
 
     def put(self, request, folder_id):
         request_serializer = self.RequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
         folder = get_folders_by(id=folder_id).first()
         self.check_object_permissions(request=request, obj=folder)
-        folder = update_folder(data=request_serializer.validated_data, folder=folder)
+        folder = update_folder(folder=folder, **request_serializer.validated_data)
+        response_serializer = self.ResponseSerializer(folder)
+        return Response({
+            'folder': response_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class FolderDuplicateApi(APIView):
+    permission_classes = [AdminPermission, ]
+
+    class RequestSerializer(serializers.Serializer):
+        name = serializers.CharField(required=True)
+        folder_id = serializers.IntegerField(required=False)
+
+    class ResponseSerializer(serializers.ModelSerializer):
+        class FolderSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Folder
+                fields = ['id', 'name', 'created_at', 'updated_at']
+
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                exclude = ['deleted', 'folder']
+
+        sub_folders = FolderSerializer(many=True)
+        templates = TemplateSerializer(many=True)
+
+        class Meta:
+            model = Folder
+            fields = ['id', 'name', 'parent_folder', 'created_at', 'updated_at', 'sub_folders', 'templates']
+
+    def post(self, request, folder_id):
+        request_serializer = self.RequestSerializer(data=request.data)
+        request_serializer.is_valid(raise_exception=True)
+        folder = get_folders_by(id=folder_id).first()
+        self.check_object_permissions(request=request, obj=folder)
+        folder = duplicate_folder(folder=folder, **request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(folder)
         return Response({
             'folder': response_serializer.data
@@ -86,11 +150,12 @@ class FolderUpdateApi(APIView):
 
 
 class FolderDeleteApi(APIView):
-    permission_classes = [OwnerPermission, ]
+    permission_classes = [AdminPermission, ]
 
     def delete(self, request, folder_id):
         folder = get_folders_by(id=folder_id).first()
         self.check_object_permissions(request=request, obj=folder)
         delete_folder(folder=folder)
         return Response({
+
         }, status=status.HTTP_200_OK)
