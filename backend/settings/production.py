@@ -26,3 +26,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 UPLOAD_FILE_DIR = os.environ.get('UPLOAD_FILE_DIR')
+
+AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
+AWS_ACCESS_TOKEN = os.environ.get('AWS_ACCESS_TOKEN')
+AWS_BUCKET_NAME = os.environ.get('AWS_BUCKET_NAME')
