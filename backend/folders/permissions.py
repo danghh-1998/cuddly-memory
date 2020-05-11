@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 class AdminPermission(BasePermission):
     def has_permission(self, request, view):
         current_user = request.user
-        return current_user.role > 0
+        return current_user.role == 1
 
     def has_object_permission(self, request, view, obj):
         current_user = request.user

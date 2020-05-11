@@ -33,7 +33,10 @@ INSTALLED_APPS = [
     'clients',
     'folders',
     'templates',
-    'bounding_boxes'
+    'bounding_boxes',
+    'tasks',
+    'images',
+    'results'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'EXCEPTION_HANDLER': 'utils.exception_handler.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'utils.exception_handler.custom_exception_handler',
+    'UNAUTHENTICATED_USER': None
 }
 
 TEMPLATES = [
@@ -72,6 +76,8 @@ TEMPLATES = [
         },
     },
 ]
+
+IMAGE_TYPES = ['.jpg', '.jpeg', '.png', '.bmp', '.eps', '.raw', '.tif', '.tiff']
 
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'utils', 'fixtures')

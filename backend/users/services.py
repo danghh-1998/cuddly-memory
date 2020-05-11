@@ -22,9 +22,7 @@ def create_user(data, **kwargs):
     data['password'] = init_password
     user = User.objects.create_user(**dict(data))
     if user.role == 1:
-        create_folder(data={
-            'name': '/',
-        }, user=user, folder_type=1)
+        create_folder(name='/', user=user, folder_type=1)
     send_init_pwd(user=user, password=init_password)
     return user, init_password
 

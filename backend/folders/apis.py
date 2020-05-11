@@ -7,6 +7,7 @@ from .services import *
 from .models import Folder
 from .permissions import *
 from templates.models import Template
+from utils.serializer_validator import validate_serializer
 
 
 class FolderDetailApi(APIView):
@@ -66,7 +67,7 @@ class FolderCreateApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         self.check_permissions(request=request)
         folder = create_folder(user=request.user, **request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(folder)
@@ -102,7 +103,7 @@ class FolderUpdateApi(APIView):
 
     def put(self, request, folder_id):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         folder = get_folders_by(id=folder_id).first()
         self.check_object_permissions(request=request, obj=folder)
         folder = update_folder(folder=folder, **request_serializer.validated_data)
@@ -139,7 +140,7 @@ class FolderDuplicateApi(APIView):
 
     def post(self, request, folder_id):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         folder = get_folders_by(id=folder_id).first()
         self.check_object_permissions(request=request, obj=folder)
         folder = duplicate_folder(folder=folder, **request_serializer.validated_data)
