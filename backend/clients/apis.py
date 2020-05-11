@@ -8,6 +8,7 @@ from users.models import User
 from .services import *
 from .models import Client
 from .permissions import SuperAdminPermission, SystemAdminPermission
+from utils.serializer_validator import validate_serializer
 
 
 class SignUpApi(APIView):
@@ -28,7 +29,7 @@ class SignUpApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         client = create_client(data=request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(client)
         return Response({
@@ -66,7 +67,7 @@ class ClientUpdateApi(APIView):
 
     def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         client = get_client_by(id=request.user.client.id)
         self.check_object_permissions(request=request, obj=client)
         client = update_client(client=client, data=request_serializer.validated_data)

@@ -7,6 +7,7 @@ from rest_framework import status
 from users.permissions import *
 from .services import *
 from .models import User
+from utils.serializer_validator import validate_serializer
 
 
 class SignInApi(APIView):
@@ -24,7 +25,7 @@ class SignInApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         auth_token = authenticate_user(**request_serializer.validated_data)
         user = auth_token.user
         response_serializer = self.ResponseSerializer(user)
@@ -54,8 +55,8 @@ class UserUpdateApi(APIView):
     permission_classes = [UserPermission, ]
 
     class RequestSerializer(serializers.Serializer):
-        name = serializers.CharField(max_length=255)
-        tel = serializers.CharField(max_length=255)
+        name = serializers.CharField(max_length=255, required=False)
+        tel = serializers.CharField(max_length=255, required=False)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
@@ -65,7 +66,7 @@ class UserUpdateApi(APIView):
 
     def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         user = get_user_by(id=request.user.id)
         self.check_object_permissions(request=request, obj=user)
         user = update_user(data=request_serializer.validated_data, user=user)
@@ -104,7 +105,7 @@ class UserChangePasswordApi(APIView):
 
     def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         user = get_user_by(id=request.user.id)
         self.check_object_permissions(request=request, obj=user)
         change_password(user=user, data=request_serializer.validated_data)
@@ -121,7 +122,7 @@ class UserRequestResetPasswordApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         generate_password_token(data=request_serializer.validated_data)
         return Response({
 
@@ -138,7 +139,7 @@ class UserResetPassword(APIView):
 
     def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         reset_password(data=request_serializer.validated_data)
         return Response({
 
@@ -162,7 +163,7 @@ class UserCreateApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         self.check_permissions(request=request)
         client = request.user.client
         sub_user_role = request.user.role - 1

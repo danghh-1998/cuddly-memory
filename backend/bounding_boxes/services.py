@@ -2,10 +2,8 @@ from .models import BoundingBox
 from utils.custom_exceptions import *
 
 
-def create_bounding_boxes(bounding_boxes, template):
-    for bounding_box in bounding_boxes:
-        BoundingBox.objects.create(**bounding_box, template=template)
-    return get_bounding_boxes_by(template=template)
+def create_bounding_box(**kwargs):
+    return BoundingBox.objects.create(**kwargs)
 
 
 def get_bounding_boxes_by(raise_exception=True, only_deleted=False, **kwargs):

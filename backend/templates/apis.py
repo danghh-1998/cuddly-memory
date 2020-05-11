@@ -9,20 +9,18 @@ from .models import Template
 from utils.custom_fields import Base64ImageField
 from bounding_boxes.models import BoundingBox
 from utils.static_file_handler import file_downloader
+from utils.custom_renderer import PNGRenderer
+from utils.serializer_validator import validate_serializer
 
 
 class TemplateCreateApi(APIView):
     permission_classes = [AdminPermission, ]
 
     class RequestSerializer(serializers.Serializer):
-        class BoundingBoxSerializer(serializers.Serializer):
-            metadata = serializers.CharField(required=True, max_length=255)
-            recognize_type = serializers.IntegerField(max_value=6, required=True)
-
-        image = Base64ImageField(required=True)
+        image = serializers.ImageField(required=True)
         name = serializers.CharField(required=True, max_length=255)
         folder_id = serializers.IntegerField(required=False)
-        bounding_boxes = BoundingBoxSerializer(many=True)
+        bounding_boxes = serializers.CharField(required=True)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class BoundingBoxSerializer(serializers.ModelSerializer):
@@ -38,7 +36,7 @@ class TemplateCreateApi(APIView):
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         self.check_permissions(request=request)
         template = create_template(user=request.user, **request_serializer.validated_data)
         response_serializer = self.ResponseSerializer(template)
@@ -73,36 +71,24 @@ class TemplateDetailApi(APIView):
 
 class TemplateDownloadImageApi(APIView):
     permission_classes = [UserPermission, ]
-
-    class ResponseSerializer(serializers.Serializer):
-        content = serializers.CharField()
+    renderer_classes = [PNGRenderer, ]
 
     def get(self, request, template_id, image_type):
         template = get_templates_by(id=template_id).first()
         self.check_object_permissions(request=request, obj=template)
         image = file_downloader(file_name=template.name, _type='templates',
                                 image_type=image_type)
-        response_serializer = self.ResponseSerializer(data={
-            'content': image
-        })
-        response_serializer.is_valid()
-        return Response({
-            'image': response_serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(image, status=status.HTTP_200_OK)
 
 
 class TemplateUpdateApi(APIView):
     permission_classes = [AdminPermission, ]
 
     class RequestSerializer(serializers.Serializer):
-        class BoundingBoxSerializer(serializers.Serializer):
-            metadata = serializers.CharField(max_length=255, required=False)
-            recognize_type = serializers.IntegerField(max_value=6, required=False)
-
         name = serializers.CharField(max_length=255, required=False)
         image = Base64ImageField(required=False)
         folder_id = serializers.IntegerField(required=False)
-        bounding_boxes = BoundingBoxSerializer(many=True, required=False)
+        bounding_boxes = serializers.CharField(required=False)
 
     class ResponseSerializer(serializers.ModelSerializer):
         class BoundingBoxSerializer(serializers.ModelSerializer):
@@ -118,7 +104,7 @@ class TemplateUpdateApi(APIView):
 
     def put(self, request, template_id):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         template = get_templates_by(id=template_id).first()
         self.check_object_permissions(request=request, obj=template)
         template = update_template(**request_serializer.validated_data, template=template)
@@ -149,7 +135,7 @@ class TemplateDuplicateApi(APIView):
 
     def post(self, request, template_id):
         request_serializer = self.RequestSerializer(data=request.data)
-        request_serializer.is_valid(raise_exception=True)
+        validate_serializer(request_serializer)
         template = get_templates_by(id=template_id).first()
         self.check_object_permissions(request=request, obj=template)
         new_template = duplicate_template(template, **request_serializer.validated_data)

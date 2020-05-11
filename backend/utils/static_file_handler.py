@@ -2,12 +2,15 @@ import os
 import binascii
 from django.conf import settings
 from PIL import Image
-import base64
 from io import BytesIO
 import boto3
 import datetime
+import zipfile
+from datetime import datetime
+from django.conf import settings
 
 from environment import DJANGO_ENV
+from utils.custom_exceptions import ValidationError
 
 
 def make_thumbnail(file):
@@ -15,11 +18,27 @@ def make_thumbnail(file):
     image = Image.open(file)
     backgound = Image.new('RGBA', thumbnail_size, (255, 255, 255, 0))
     image.thumbnail(thumbnail_size, Image.ANTIALIAS)
-    backgound.paste(image,
-                    (int((thumbnail_size[0] - image.size[0]) / 2), int((thumbnail_size[1] - image.size[1]) / 2)))
+    backgound.paste(image, (int((thumbnail_size[0] - image.size[0]) / 2), int((thumbnail_size[1] - image.size[1]) / 2)))
     buffered = BytesIO()
     backgound.save(buffered, format='PNG')
     return buffered
+
+
+def extract_zip(file):
+    zip_file = zipfile.ZipFile(file)
+    now = str(datetime.now())
+    tmp_dir = f"/tmp/{now}"
+    zip_file.extractall(tmp_dir)
+    namelist = zip_file.namelist()
+    encypted_names = []
+    for tmp_filepath in [os.path.join(tmp_dir, name) for name in namelist]:
+        with open(tmp_filepath, 'rb') as tmp_file:
+            _, ext = os.path.splitext(tmp_filepath)
+            if ext not in settings.IMAGE_TYPES:
+                raise ValidationError("Bad zipfile")
+            encypted_name, _ = file_uploader(image=BytesIO(tmp_file.read()), _type='images')
+            encypted_names.append(encypted_name)
+    return encypted_names, namelist
 
 
 def upload_local(file, path):
@@ -33,7 +52,7 @@ def upload_local(file, path):
 def download_local(path):
     abs_path = os.path.join(settings.UPLOAD_FILE_DIR, path)
     with open(abs_path, 'rb+') as file:
-        return base64.b64encode(file.read())
+        return file.read()
 
 
 def upload_s3(file, path):
@@ -51,24 +70,28 @@ def download_s3(path):
     tmp_file = os.path.join('/tmp', f"{str(datetime.datetime.now())}.png")
     s3.download_file(bucket_name, path, tmp_file)
     with open(tmp_file, 'rb+') as file:
-        return base64.b64encode(file.read())
+        return file.read()
 
 
-def file_uploader(base64_image, _type):
+def file_uploader(image, _type):
+    image_name = None
+    if not isinstance(image, BytesIO):
+        image_name = image.name
+        image = image.file
     encypted_name = f"{binascii.hexlify(os.urandom(16)).decode()}.png"
     is_production = DJANGO_ENV == 'production'
-    file = base64_image.file
+    image.seek(0)
     if is_production:
-        upload_s3(file=file, path=os.path.join(_type, encypted_name))
+        upload_s3(file=image, path=os.path.join(_type, encypted_name))
         if _type == 'templates':
-            thumbnail = make_thumbnail(file=file)
+            thumbnail = make_thumbnail(file=image)
             upload_s3(file=thumbnail, path=os.path.join(_type, 'thumbnails', encypted_name))
     else:
-        upload_local(file=file, path=os.path.join(_type, encypted_name))
+        upload_local(file=image, path=os.path.join(_type, encypted_name))
         if _type == 'templates':
-            thumbnail = make_thumbnail(file=file)
+            thumbnail = make_thumbnail(file=image)
             upload_local(file=thumbnail, path=os.path.join(_type, 'thumbnails', encypted_name))
-    return encypted_name
+    return encypted_name, image_name
 
 
 def file_downloader(file_name, _type, image_type=0):

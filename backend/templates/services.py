@@ -1,24 +1,68 @@
+from jsonschema import validate
+import json
+import os
+from django.conf import settings
+
 from utils.static_file_handler import file_uploader
 from .models import Template
 from folders.services import get_folder_or_root
-from bounding_boxes.services import create_bounding_boxes
+from bounding_boxes.services import create_bounding_box
 from utils.custom_exceptions import *
 from folders.services import get_folders_by, list_template_name
 
 
+def validate_bounding_boxes(data):
+    schema = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "type": "object",
+                    "properties": {
+                        "metadata": {
+                            "type": "object",
+                            "properties": {
+                                "x": {"type": "integer"},
+                                "y": {"type": "integer"},
+                            }
+                        },
+                        "recognize_type": {"type": "integer"}
+                    }
+                }
+            }
+        }
+    }
+    try:
+        bounding_boxes = json.loads(data)
+    except json.decoder.JSONDecodeError:
+        raise ValidationError
+    try:
+        validate(instance=bounding_boxes, schema=schema)
+    except Exception:
+        raise ValidationError
+    return bounding_boxes
+
+
 def create_template(user, **kwargs):
-    base64_image = kwargs.get('image')
+    image = kwargs.get('image')
+    _, ext = os.path.splitext(image.name)
+    if ext not in settings.IMAGE_TYPES:
+        raise ValidationError('Bad image type')
     display_name = kwargs.get('name')
     folder_id = kwargs.get('folder_id')
+    bounding_boxes = validate_bounding_boxes(data=kwargs.get('bounding_boxes'))
     folder = get_folder_or_root(user=user, folder_id=folder_id)
     if folder.user != user:
         raise Unauthorized
     sibling_names = list_template_name(folder=folder)
     if display_name in sibling_names:
         raise DuplicateEntry(entry=display_name, key='name')
-    encypted_name = file_uploader(base64_image=base64_image, _type='templates')
+    encypted_name, _ = file_uploader(image=image, _type='templates')
     template = Template.objects.create(name=encypted_name, display_name=display_name, folder=folder)
-    create_bounding_boxes(kwargs.get('bounding_boxes'), template=template)
+    for bounding_box in bounding_boxes:
+        create_bounding_box(metadata=json.dumps(bounding_box.get('metadata')),
+                            recognize_type=bounding_box.get('recognize_type'), template=template)
     return template
 
 
@@ -36,7 +80,9 @@ def update_template(template, **kwargs):
     if not any(kwargs.values()):
         raise ValidationError
     new_bounding_boxes = kwargs.get('bounding_boxes')
-    base64_image = kwargs.get('image')
+    if new_bounding_boxes:
+        new_bounding_boxes = validate_bounding_boxes(data=kwargs.get('bounding_boxes'))
+    image = kwargs.get('image')
     display_name = kwargs.get('name')
     folder_id = kwargs.get('folder_id')
     folder = get_folders_by(id=folder_id).first() if folder_id else template.folder
@@ -48,9 +94,11 @@ def update_template(template, **kwargs):
         bounding_boxes = template.bounding_boxes.all()
         for bounding_box in bounding_boxes:
             bounding_box.delete()
-        create_bounding_boxes(new_bounding_boxes, template=template)
-    if base64_image:
-        encypted_name = file_uploader(base64_image=base64_image, _type='templates')
+        for bounding_box in new_bounding_boxes:
+            create_bounding_box(metadata=json.dumps(bounding_box.get('metadata')),
+                                recognize_type=bounding_box.get('recognize_type'), template=template)
+    if image:
+        encypted_name = file_uploader(image=image, _type='templates')
         template.name = encypted_name
         template.save(update_fields=['name'])
     if display_name:

@@ -26,7 +26,7 @@ def create_folder(user, folder_type=0, **kwargs):
         parent_folder = user.folders.filter(id=parent_folder_id).first()
         if not parent_folder:
             raise ObjectNotFound
-    sibling_names = list_sub_folder_name(parent_folder)
+    sibling_names = list_sub_folder_name(parent_folder) if folder_type == 0 else []
     if name in sibling_names:
         raise DuplicateEntry(entry=name, key='name')
     return Folder.objects.create(name=name, parent_folder=parent_folder, user=user, folder_type=folder_type)
