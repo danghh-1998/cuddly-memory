@@ -18,7 +18,6 @@ class Task(SafeDeleteModel):
         (PROCESSING, 'PROCESSING'),
         (DONE, 'DONE'),
         (FAILED, 'FAILED'),
-
     )
 
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)

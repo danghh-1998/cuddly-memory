@@ -9,7 +9,7 @@ class Unauthenticated(APIException):
 
 class Unauthorized(APIException):
     status_code = 200
-    default_detail = 'Unauthorized'
+    default_detail = 'You do not have permission to perform this action.'
     default_code = '601'
 
 
