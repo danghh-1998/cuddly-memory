@@ -1,6 +1,5 @@
 import os
 import binascii
-from django.conf import settings
 from PIL import Image
 from io import BytesIO
 import boto3
@@ -8,6 +7,7 @@ import datetime
 import zipfile
 from datetime import datetime
 from django.conf import settings
+import shutil
 
 from environment import DJANGO_ENV
 from utils.custom_exceptions import ValidationError
@@ -38,6 +38,7 @@ def extract_zip(file):
                 raise ValidationError("Bad zipfile")
             encypted_name, _ = file_uploader(image=BytesIO(tmp_file.read()), _type='images')
             encypted_names.append(encypted_name)
+    shutil.rmtree(tmp_dir)
     return encypted_names, namelist
 
 
@@ -94,7 +95,7 @@ def file_uploader(image, _type):
     return encypted_name, image_name
 
 
-def file_downloader(file_name, _type, image_type=0):
+def file_downloader(file_name, _type, image_type=1):
     is_production = DJANGO_ENV == 'production'
     if is_production:
         if image_type:
