@@ -1,5 +1,6 @@
 <template>
     <auth-layout>
+        <vue-headful title="Sign up" />
         <template
             #form
             class="signup"
@@ -146,7 +147,7 @@
 </template>
 
 <script>
-    import AuthLayout from "@/components/AuthLayout";
+    import AuthLayout from "@/components/auth/AuthLayout";
     import {validationMixin} from "vuelidate";
     import {required, email, minLength, numeric, maxLength} from "vuelidate/lib/validators"
     import snakecaseKeys from 'snakecase-keys'
@@ -174,7 +175,7 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['user/submit']
+                return this.$store.getters['auth/submit']
             }
         },
         validations: {
@@ -226,12 +227,12 @@
                 if (this.$v.form.$anyError) {
                     this.makeToast();
                 } else {
-                    this.$store.dispatch('user/signUp', snakecaseKeys(this.form))
+                    this.$store.dispatch('auth/signUp', snakecaseKeys(this.form))
                     .then(() => {
                         if (this.status === 'FAILED') {
                             this.makeToast();
                             this.resetForm();
-                            this.$store.dispatch('user/resetStatus');
+                            this.$store.dispatch('auth/resetStatus');
                         } else {
                             this.$router.push('/sign-in');
                         }

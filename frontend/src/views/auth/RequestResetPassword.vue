@@ -1,5 +1,6 @@
 <template>
     <auth-layout>
+        <vue-headful title="Forgot Password" />
         <template
             #form
             class="req-reset-pwd"
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-    import AuthLayout from "@/components/AuthLayout";
+    import AuthLayout from "@/components/auth/AuthLayout";
     import {validationMixin} from "vuelidate";
     import {required, email} from "vuelidate/lib/validators"
     import snakecaseKeys from 'snakecase-keys'
@@ -72,7 +73,7 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['user/submit']
+                return this.$store.getters['auth/submit']
             }
         },
         methods: {
@@ -81,7 +82,7 @@
                 return $dirty ? !$error : null;
             },
             requestResetPassword: function () {
-                this.$store.dispatch('user/requestResetPassword', snakecaseKeys(this.form))
+                this.$store.dispatch('auth/requestResetPassword', snakecaseKeys(this.form))
                 .then(() => {
                     this.$router.push('/reset-password')
                 })

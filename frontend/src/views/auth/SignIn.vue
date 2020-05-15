@@ -1,5 +1,6 @@
 <template>
     <auth-layout>
+        <vue-headful title="Sign in" />
         <template
             #form
             class="signin"
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-    import AuthLayout from "@/components/AuthLayout";
+    import AuthLayout from "@/components/auth/AuthLayout";
     import {validationMixin} from "vuelidate";
     import {required, email, minLength} from "vuelidate/lib/validators"
     import snakecaseKeys from 'snakecase-keys'
@@ -110,7 +111,7 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['user/submit']
+                return this.$store.getters['auth/submit']
             }
         },
         methods: {
@@ -136,18 +137,18 @@
                 if (this.$v.form.$anyError) {
                     this.makeToast();
                 } else {
-                    this.$store.dispatch('user/signIn', snakecaseKeys(this.form))
+                    this.$store.dispatch('auth/signIn', snakecaseKeys(this.form))
                     .then(() => {
                         if (this.status === 'FAILED') {
                             this.makeToast();
                             this.resetForm();
-                            this.$store.dispatch('user/resetStatus');
+                            this.$store.dispatch('auth/resetStatus');
                         } else {
-                            let user = this.$store.getters['user/user'];
+                            let user = this.$store.getters['auth/user'];
                             if (!user.changeInitPassword){
                                 this.$router.push('/change-init-password')
                             } else {
-                                this.$router.push('/');
+                                this.$router.push('/folders/0');
                             }
                         }
                     })

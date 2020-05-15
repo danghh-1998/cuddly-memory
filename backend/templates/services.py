@@ -44,6 +44,12 @@ def validate_bounding_boxes(data):
     return bounding_boxes
 
 
+def allow_dowload_image(user, template):
+    owner = template.folder.user
+    access_users = [*list(owner.sub_users.all()), owner]
+    return user in access_users
+
+
 def create_template(user, **kwargs):
     image = kwargs.get('image')
     _, ext = os.path.splitext(image.name)

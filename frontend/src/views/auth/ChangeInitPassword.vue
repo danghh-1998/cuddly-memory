@@ -1,23 +1,25 @@
 <template>
     <auth-layout>
+        <vue-headful title="Change password" />
         <template
             #form
-            class="reset-password"
+            class="change-init"
         >
-            <div class="reset-password-title">
-                <h1>Reset password</h1>
+            <div class="signin-title">
+                <h1>Change password</h1>
             </div>
             <div class="change-init-form">
                 <b-form>
                     <b-form-group
-                        label="Reset password token"
-                        label-for="form-reset-password-token"
+                        label="Old password"
+                        label-for="form-old-password"
                     >
                         <b-form-input
-                            id="form-reset-password-token"
-                            v-model="$v.form.resetPasswordToken.$model"
-                            :state="validateState('resetPasswordToken')"
-                            placeholder="Reset password token"
+                            id="form-old-password"
+                            v-model="$v.form.oldPassword.$model"
+                            type="password"
+                            :state="validateState('oldPassword')"
+                            placeholder="Enter old password"
                         />
                     </b-form-group>
                     <b-form-group
@@ -52,9 +54,9 @@
                             pill
                             block
                             :disabled="status === 'SUBMITTING'"
-                            @click="resetPassword"
+                            @click="changeInitPassword"
                         >
-                            Reset password
+                            Change password
                             <b-spinner
                                 small
                                 type="grow"
@@ -69,13 +71,13 @@
 </template>
 
 <script>
-    import AuthLayout from "@/components/AuthLayout";
+    import AuthLayout from "@/components/auth/AuthLayout";
     import {validationMixin} from "vuelidate";
     import {required, minLength} from "vuelidate/lib/validators"
     import snakecaseKeys from 'snakecase-keys'
 
     export default {
-        name: "ResetPassword",
+        name: "ChangeInitPassword",
         components: {
             AuthLayout
         },
@@ -85,7 +87,7 @@
         data: function () {
             return {
                 form: {
-                    resetPasswordToken: null,
+                    oldPassword: null,
                     password: null,
                     passwordConfirmation: null
                 }
@@ -93,7 +95,7 @@
         },
         validations: {
             form: {
-                resetPasswordToken: {
+                oldPassword: {
                     required,
                     minLength: minLength(6)
                 },
@@ -109,11 +111,12 @@
         },
         computed: {
             status: function () {
-                return this.$store.getters['user/submit']
+                return this.$store.getters['auth/submit']
             }
         },
         mounted: function () {
-            this.makeToast('Reset password token sent to your email', 'info', 'Reset password')
+            this.makeToast('You must change your password before logging on the first time.',
+                'info', 'Change initial password')
         },
         methods: {
             validateState: function (name) {
@@ -134,16 +137,16 @@
                     passwordConfirmation: null
                 }
             },
-            resetPassword: function () {
-                this.$store.dispatch('user/resetPassword', snakecaseKeys(this.form))
+            changeInitPassword: function () {
+                this.$store.dispatch('auth/changeInitPassword', snakecaseKeys(this.form))
                 .then(() => {
                     if (this.status === 'FAILED') {
-                        this.makeToast('Incorrect token or password mismatch', 'danger',
-                            'Reset password failed');
+                        this.makeToast('Incorrect password or password mismatch', 'danger',
+                            'Change initial password failed');
                         this.resetForm();
-                        this.$store.dispatch('user/resetStatus');
+                        this.$store.dispatch('auth/resetStatus');
                     } else {
-                        this.$router.push('/sign-in')
+                        this.$router.push('/')
                     }
                 })
             }

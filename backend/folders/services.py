@@ -3,7 +3,7 @@ from utils.custom_exceptions import *
 
 
 def get_root_folder(user):
-    return user.folders.first()
+    return user.folders.first() if user.role == 1 else user.admin.folders.first()
 
 
 def list_sub_folder_name(folder):
@@ -16,6 +16,14 @@ def list_template_name(folder):
 
 def has_sub_folder_or_template(folder):
     return list(folder.templates.all()) or list(folder.sub_folders.all())
+
+
+def recursive_folder_ids(folder):
+    ids = [folder.id]
+    sub_folders = folder.sub_folders.all()
+    for sub_folder in sub_folders:
+        ids.extend(recursive_folder_ids(sub_folder))
+    return ids
 
 
 def create_folder(user, folder_type=0, **kwargs):
@@ -65,10 +73,14 @@ def duplicate_folder(folder, **kwargs):
     sibling_names = list_sub_folder_name(new_parent_folder)
     if name in sibling_names:
         raise DuplicateEntry(entry=name, key='name')
+    sub_folder_ids = recursive_folder_ids(folder)
+    if folder_id in sub_folder_ids:
+        raise ValidationError(message='target folder inside source folder')
     sub_folders = folder.sub_folders.all()
     templates = folder.templates.all()
     folder.id = None
     folder.name = name
+    folder.parent_folder = new_parent_folder
     folder.save()
     for sub_folder in sub_folders:
         duplicate_folder(folder=sub_folder, folder_id=folder.id, name=sub_folder.name)
@@ -98,3 +110,4 @@ def delete_folder(folder):
     if folder.folder_type == 1:
         return
     folder.delete()
+    return folder

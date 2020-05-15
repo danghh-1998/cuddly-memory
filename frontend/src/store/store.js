@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user from "@/store/modules/user/user";
+import auth from "@/store/modules/auth/auth";
+import folders from "@/store/modules/folders/folders";
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     modules: {
-        user
+        auth,
+        folders
     }
 });
