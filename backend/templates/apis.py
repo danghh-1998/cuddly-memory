@@ -8,6 +8,7 @@ from .permissions import *
 from .models import Template
 from utils.custom_fields import Base64ImageField
 from bounding_boxes.models import BoundingBox
+from auth_tokens.services import get_auth_token_by
 from utils.static_file_handler import file_downloader
 from utils.custom_renderer import PNGRenderer
 from utils.serializer_validator import validate_serializer
@@ -75,7 +76,8 @@ class TemplateDownloadImageApi(APIView):
 
     def get(self, request, template_id, image_type):
         template = get_templates_by(id=template_id).first()
-        self.check_object_permissions(request=request, obj=template)
+        auth_token = get_auth_token_by(key=request.query_params.get('token'))
+        allow_dowload_image(auth_token.user, template=template)
         image = file_downloader(file_name=template.name, _type='templates',
                                 image_type=image_type)
         return Response(image, status=status.HTTP_200_OK)

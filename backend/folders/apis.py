@@ -153,10 +153,16 @@ class FolderDuplicateApi(APIView):
 class FolderDeleteApi(APIView):
     permission_classes = [AdminPermission, ]
 
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Folder
+            fields = ['id', 'name', 'parent_folder', 'created_at', 'updated_at']
+
     def delete(self, request, folder_id):
         folder = get_folders_by(id=folder_id).first()
         self.check_object_permissions(request=request, obj=folder)
-        delete_folder(folder=folder)
+        folder = delete_folder(folder=folder)
+        response_serializer = self.ResponseSerializer(folder)
         return Response({
-
+            'folder': response_serializer.data
         }, status=status.HTTP_200_OK)
