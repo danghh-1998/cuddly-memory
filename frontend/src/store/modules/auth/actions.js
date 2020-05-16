@@ -39,5 +39,8 @@ export default {
             .then((res) => {
                 context.commit('resetPassword', res)
             })
+    },
+    signOut: context => {
+        context.commit('signOut')
     }
 }

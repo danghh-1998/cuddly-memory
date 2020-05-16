@@ -1,6 +1,5 @@
 <template>
     <auth-layout>
-        <vue-headful title="Reset password" />
         <template
             #form
             class="reset-password"

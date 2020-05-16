@@ -93,7 +93,6 @@
     }
 
     .template-footer {
-        user-select: none;
     }
 
     .template-icon {

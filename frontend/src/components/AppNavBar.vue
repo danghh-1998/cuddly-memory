@@ -4,6 +4,7 @@
             toggleable="lg"
             type="dark"
             variant="dark"
+            fixed="top"
         >
             <b-navbar-brand href="#">
                 <img
@@ -23,13 +24,13 @@
             >
                 <b-navbar-nav class="m-auto">
                     <b-nav-item
-                        href="/folders/0"
+                        :active="routeName==='folders'"
+                        :href="routeName==='folders' ? '#' : '/folders/0'"
                     >
                         <span class="nav-text">Template</span>
                     </b-nav-item>
                     <b-nav-item
                         href="#"
-                        class="ml-2"
                     >
                         <span class="nav-text">Task</span>
                     </b-nav-item>
@@ -44,7 +45,10 @@
                         <b-dropdown-item href="#">
                             Profile
                         </b-dropdown-item>
-                        <b-dropdown-item href="#">
+                        <b-dropdown-item
+                            href="#"
+                            @click="signOut"
+                        >
                             Sign Out
                         </b-dropdown-item>
                     </b-nav-item-dropdown>
@@ -56,7 +60,18 @@
 
 <script>
     export default {
-        name: "AppNavBar"
+        name: "AppNavBar",
+        computed: {
+            routeName: function () {
+                return this.$route.name;
+            }
+        },
+        methods: {
+            signOut: function () {
+                this.$store.dispatch('auth/signOut');
+                this.$router.push({name: 'sign-in'})
+            }
+        }
     }
 </script>
 
@@ -64,6 +79,7 @@
     .app-nav {
         font-family: 'Montserrat', sans-serif;
     }
+
     .nav-text {
         font-size: 18px;
     }

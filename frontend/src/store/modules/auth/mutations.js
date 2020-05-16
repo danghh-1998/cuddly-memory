@@ -41,5 +41,8 @@ export default {
         } else {
             state.status = '';
         }
+    },
+    signOut: () => {
+        localStorage.removeItem('token')
     }
 }

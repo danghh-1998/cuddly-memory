@@ -1,6 +1,5 @@
 <template>
     <auth-layout>
-        <vue-headful title="Change password" />
         <template
             #form
             class="change-init"

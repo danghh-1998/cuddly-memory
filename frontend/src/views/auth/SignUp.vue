@@ -1,6 +1,5 @@
 <template>
     <auth-layout>
-        <vue-headful title="Sign up" />
         <template
             #form
             class="signup"

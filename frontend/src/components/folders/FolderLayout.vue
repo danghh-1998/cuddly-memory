@@ -75,7 +75,7 @@
 
 <style scoped>
     .layout {
-        height: 100vh;
+        height: 100%;
     }
 
     .app-nav-bar {
@@ -85,12 +85,13 @@
     .page-content {
         height: calc(100vh - 65px);
         position: relative;
+        box-sizing: border-box;
     }
 
     .global-context-menu {
         height: 100%;
         width: 100%;
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         z-index: 2;
@@ -98,12 +99,13 @@
 
     .wrapper {
         font-family: 'Montserrat', sans-serif;
-        padding: 60px;
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        box-sizing: border-box;
+        padding: 100px 60px 60px;
     }
 
     .no-content {
