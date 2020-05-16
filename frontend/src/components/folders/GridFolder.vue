@@ -187,7 +187,6 @@
     }
 
     .folder-content {
-        user-select: none;
     }
 
     .folder-content-wrapper {

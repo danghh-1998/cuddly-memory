@@ -1,6 +1,5 @@
 <template>
     <auth-layout>
-        <vue-headful title="Forgot Password" />
         <template
             #form
             class="req-reset-pwd"

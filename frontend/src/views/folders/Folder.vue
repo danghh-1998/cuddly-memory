@@ -1,6 +1,5 @@
 <template>
     <folder-layout>
-        <vue-headful title="Template" />
         <template
             #folder-group
         >
@@ -87,9 +86,9 @@
                     :key="template.id"
                     xl="2"
                     lg="2"
-                    md="3"
-                    sm="3"
-                    cols="4"
+                    md="4"
+                    sm="4"
+                    cols="6"
                 >
                     <grid-template
                         v-contextmenu:contextmenutemplate
