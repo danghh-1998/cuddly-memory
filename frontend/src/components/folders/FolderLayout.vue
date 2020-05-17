@@ -2,7 +2,9 @@
     <div class="layout">
         <app-nav-bar class="app-nav-bar" />
         <div class="page-content">
-            <global-context-menu class="global-context-menu" />
+            <global-context-menu
+                class="global-context-menu"
+            />
             <div class="wrapper">
                 <div
                     v-if="isNoContent"

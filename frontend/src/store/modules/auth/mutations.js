@@ -11,6 +11,7 @@ export default {
             state.status = 'FAILED';
         } else {
             localStorage.setItem('token', payload.data.token);
+            localStorage.setItem('id', payload.data.user.id)
             state.user = payload.data.user;
             state.status = '';
         }
@@ -23,7 +24,7 @@ export default {
             state.status = '';
         }
     },
-    changeInitPassword: (state, payload) => {
+    changePassword: (state, payload) => {
         let code = payload.data.statusCode;
         if (code === '600' || code === '602') {
             state.status = 'FAILED';
@@ -44,5 +45,9 @@ export default {
     },
     signOut: () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('id')
+    },
+    updateProfile: () => {
+        state.status = '';
     }
 }

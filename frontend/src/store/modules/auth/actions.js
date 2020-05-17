@@ -18,12 +18,12 @@ export default {
                 context.commit('signUp', res)
             })
     },
-    changeInitPassword: (context, payload) => {
+    changePassword: (context, payload) => {
         context.commit('submit');
         api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
         return api.put('users/change_password', payload)
             .then((res) => {
-                context.commit('changeInitPassword', res)
+                context.commit('changePassword', res)
             })
     },
     requestResetPassword: (context, payload) => {
@@ -42,5 +42,13 @@ export default {
     },
     signOut: context => {
         context.commit('signOut')
+    },
+    updateProfile: (context, payload) => {
+        context.commit('submit');
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.put(`users/update`, payload)
+            .then((res) => {
+                context.commit('updateProfile', res)
+            })
     }
 }

@@ -59,7 +59,6 @@ def change_password(user, data):
     user.change_init_password = True
     user.is_active = True
     user.save(update_fields=['password', 'change_init_password', 'is_active'])
-    expire_token(user=user)
     return user
 
 

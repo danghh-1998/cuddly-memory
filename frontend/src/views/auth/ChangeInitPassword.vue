@@ -137,7 +137,7 @@
                 }
             },
             changeInitPassword: function () {
-                this.$store.dispatch('auth/changeInitPassword', snakecaseKeys(this.form))
+                this.$store.dispatch('auth/changePassword', snakecaseKeys(this.form))
                 .then(() => {
                     if (this.status === 'FAILED') {
                         this.makeToast('Incorrect password or password mismatch', 'danger',

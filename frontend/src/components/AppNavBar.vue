@@ -25,7 +25,7 @@
                 <b-navbar-nav class="m-auto">
                     <b-nav-item
                         :active="routeName==='folders'"
-                        :href="routeName==='folders' ? '#' : '/folders/0'"
+                        :href="$route.path === '/folders/0' ? '#': '/folders/0'"
                     >
                         <span class="nav-text">Template</span>
                     </b-nav-item>
@@ -42,7 +42,7 @@
                         >
                             <span class="nav-text">User</span>
                         </template>
-                        <b-dropdown-item href="#">
+                        <b-dropdown-item href="/profile">
                             Profile
                         </b-dropdown-item>
                         <b-dropdown-item
