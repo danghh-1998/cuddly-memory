@@ -40,6 +40,17 @@
                 </b-form>
             </div>
         </template>
+        <template
+            #navigate
+        >
+            <span class="navigate-text">Have an account?</span>
+            <router-link
+                to="/sign-in"
+                class="navigate-link"
+            >
+                Sign in
+            </router-link>
+        </template>
     </auth-layout>
 </template>
 
@@ -54,7 +65,7 @@
         components: {
             AuthLayout
         },
-        mixins: [validationMixin, ],
+        mixins: [validationMixin,],
         data: function () {
             return {
                 form: {
@@ -82,15 +93,28 @@
             },
             requestResetPassword: function () {
                 this.$store.dispatch('auth/requestResetPassword', snakecaseKeys(this.form))
-                .then(() => {
-                    this.$router.push('/reset-password')
-                })
+                    .then(() => {
+                        this.$router.push('/reset-password')
+                    })
             }
         }
     }
 </script>
 
 <style scoped>
+    .navigate-text {
+        color: #888888;
+    }
+
+    .navigate-link {
+        color: #777777;
+        text-decoration: none;
+    }
+
+    .navigate-link:hover {
+        color: #5cb85c;
+    }
+
     .hidden {
         display: none;
     }

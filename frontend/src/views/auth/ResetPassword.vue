@@ -65,6 +65,17 @@
                 </b-form>
             </div>
         </template>
+        <template
+            #navigate
+        >
+            <span class="navigate-text">Have an account?</span>
+            <router-link
+                to="/sign-in"
+                class="navigate-link"
+            >
+                Sign in
+            </router-link>
+        </template>
     </auth-layout>
 </template>
 
@@ -136,22 +147,35 @@
             },
             resetPassword: function () {
                 this.$store.dispatch('auth/resetPassword', snakecaseKeys(this.form))
-                .then(() => {
-                    if (this.status === 'FAILED') {
-                        this.makeToast('Incorrect token or password mismatch', 'danger',
-                            'Reset password failed');
-                        this.resetForm();
-                        this.$store.dispatch('auth/resetStatus');
-                    } else {
-                        this.$router.push('/sign-in')
-                    }
-                })
+                    .then(() => {
+                        if (this.status === 'FAILED') {
+                            this.makeToast('Incorrect token or password mismatch', 'danger',
+                                'Reset password failed');
+                            this.resetForm();
+                            this.$store.dispatch('auth/resetStatus');
+                        } else {
+                            this.$router.push('/sign-in')
+                        }
+                    })
             }
         }
     }
 </script>
 
 <style scoped>
+    .navigate-text {
+        color: #888888;
+    }
+
+    .navigate-link {
+        color: #777777;
+        text-decoration: none;
+    }
+
+    .navigate-link:hover {
+        color: #5cb85c;
+    }
+
     .hidden {
         display: none;
     }

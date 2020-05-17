@@ -5,6 +5,7 @@ import ChangeInitPassword from "@/views/auth/ChangeInitPassword";
 import RequestResetPassword from "@/views/auth/RequestResetPassword";
 import ResetPassword from "@/views/auth/ResetPassword";
 import Folder from "@/views/folders/Folder";
+import Profile from "@/views/auth/Profile";
 
 let routes = [
     {
@@ -56,6 +57,15 @@ let routes = [
             title: 'Template'
         }
     },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {
+            requireAuth: true,
+            title: 'Profile'
+        }
+    },
 ];
 
 const router = new VueRouter({mode: 'history', routes});
@@ -65,7 +75,7 @@ router.beforeEach((to, from, next) => {
     if (requireAuth && !token) {
         return next('/sign-in');
     } else if (token && !requireAuth && to.path !== '/folders/0') {
-        return next('/folders/0');
+        return next();
     }
     document.title = to.meta.title
     return next();
