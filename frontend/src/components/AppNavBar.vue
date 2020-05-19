@@ -77,7 +77,6 @@
 
 <style scoped>
     .app-nav {
-        font-family: 'Montserrat', sans-serif;
     }
 
     .nav-text {

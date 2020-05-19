@@ -100,7 +100,6 @@
     }
 
     .wrapper {
-        font-family: 'Montserrat', sans-serif;
         position: absolute;
         top: 0;
         left: 0;
@@ -111,7 +110,6 @@
     }
 
     .no-content {
-        font-family: 'Montserrat', sans-serif;
         font-size: 14px;
         width: 250px;
         height: 300px;

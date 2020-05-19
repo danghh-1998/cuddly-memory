@@ -70,7 +70,6 @@
         width: 100%;
     }
     .auth-pages {
-        font-family: 'Montserrat', sans-serif;
         height: 100vh;
         display: flex;
         justify-content: center;

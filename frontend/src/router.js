@@ -6,6 +6,7 @@ import RequestResetPassword from "@/views/auth/RequestResetPassword";
 import ResetPassword from "@/views/auth/ResetPassword";
 import Folder from "@/views/folders/Folder";
 import Profile from "@/views/auth/Profile";
+import Template from "@/views/templates/Template";
 
 let routes = [
     {
@@ -26,7 +27,7 @@ let routes = [
     },
     {
         path: '/change-init-password',
-        name:'change-init-password',
+        name: 'change-init-password',
         component: ChangeInitPassword,
         meta: {
             title: 'Change password'
@@ -66,6 +67,15 @@ let routes = [
             title: 'Profile'
         }
     },
+    {
+        path: '/templates',
+        name: 'templates',
+        component: Template,
+        meta: {
+            requireAuth: true,
+            title: 'Template'
+        }
+    }
 ];
 
 const router = new VueRouter({mode: 'history', routes});
