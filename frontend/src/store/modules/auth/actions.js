@@ -5,6 +5,7 @@ export default {
         context.commit('resetStatus');
     },
     signIn: (context, payload) => {
+        api.defaults.headers.common.Authorization = null
         context.commit('submit');
         return api.post('auth/sign_in', payload)
             .then((res) => {
@@ -12,6 +13,7 @@ export default {
             })
     },
     signUp: (context, payload) => {
+        api.defaults.headers.common.Authorization = null
         context.commit('submit');
         return api.post('auth/sign_up', payload)
             .then((res) => {
@@ -27,6 +29,7 @@ export default {
             })
     },
     requestResetPassword: (context, payload) => {
+        api.defaults.headers.common.Authorization = null
         context.commit('submit');
         return api.post('users/req_reset_password', payload)
             .then((res) => {
@@ -34,6 +37,7 @@ export default {
             })
     },
     resetPassword: (context, payload) => {
+        api.defaults.headers.common.Authorization = null
         context.commit('submit');
         return api.put('users/reset_password', payload)
             .then((res) => {
@@ -41,7 +45,11 @@ export default {
             })
     },
     signOut: context => {
-        context.commit('signOut')
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.delete('users/sign_out')
+            .then(() => {
+                context.commit('signOut')
+            })
     },
     updateProfile: (context, payload) => {
         context.commit('submit');

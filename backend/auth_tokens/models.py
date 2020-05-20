@@ -16,7 +16,7 @@ class AuthToken(SafeDeleteModel):
 
     key = models.CharField(max_length=40, primary_key=True)
     expired_at = models.DateTimeField(auto_now_add=False)
-    user = models.OneToOneField(User, related_name='auth_token', on_delete=models.SET_NULL, null=True, unique=False)
+    user = models.ForeignKey(User, related_name='auth_tokens', on_delete=models.SET_NULL, null=True, unique=False)
     created_at = models.DateTimeField(auto_now_add=False)
     updated_at = models.DateTimeField(auto_now=True)
 

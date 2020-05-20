@@ -90,7 +90,6 @@ def authenticate_user(email, password):
     user = get_user_by(email=email)
     if not user.check_password(raw_password=password):
         raise Unauthenticated
-    expire_token(user=user)
     auth_token = create_token(user=user)
     return auth_token
 

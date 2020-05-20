@@ -7,6 +7,7 @@ import Vuelidate from 'vuelidate'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
+import { sync } from 'vuex-router-sync'
 
 import {store} from "@/store/store";
 import router from "@/router";
@@ -17,6 +18,8 @@ Router.prototype.push = function push(location, onResolve, onReject) {
     if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject);
     return originalPush.call(this, location).catch(err => err)
 };
+const unsync = sync(store, router)
+unsync()
 
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 

@@ -8,11 +8,11 @@ from utils.custom_exceptions import *
 
 def expire_token(user):
     try:
-        auth_token = user.auth_token
-        auth_token.expired_at = timezone.now()
-        auth_token.user_id = None
-        auth_token.save(update_fields=['expired_at', 'user_id'])
-        auth_token.delete()
+        for auth_token in user.auth_tokens.all():
+            auth_token.expired_at = timezone.now()
+            auth_token.user_id = None
+            auth_token.save(update_fields=['expired_at', 'user_id'])
+            auth_token.delete()
     except AuthToken.DoesNotExist:
         pass
 
@@ -45,7 +45,6 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             auth_token = AuthToken.objects.get(key=key)
         except AuthToken.DoesNotExist:
             raise AuthenticationFailed
-
         is_expired, auth_token = token_expire_handler(auth_token)
 
         if is_expired:
