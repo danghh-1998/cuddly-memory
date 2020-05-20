@@ -11,7 +11,6 @@ export default {
             state.status = 'FAILED';
         } else {
             localStorage.setItem('token', payload.data.token);
-            localStorage.setItem('id', payload.data.user.id)
             state.user = payload.data.user;
             state.status = '';
         }
@@ -44,8 +43,7 @@ export default {
         }
     },
     signOut: () => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('id')
+        localStorage.clear()
     },
     updateProfile: () => {
         state.status = '';
