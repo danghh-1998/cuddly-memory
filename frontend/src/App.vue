@@ -4,7 +4,7 @@
         @contextmenu="handleContextMenu($event)"
     >
         <vuescroll :ops="ops">
-            <router-view />
+            <router-view :key="$route.fullPath" />
         </vuescroll>
     </div>
 </template>
@@ -31,7 +31,7 @@
             }
         },
         methods: {
-            handleContextMenu: function(e) {
+            handleContextMenu: function (e) {
                 e.preventDefault()
             }
         }

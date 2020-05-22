@@ -47,7 +47,7 @@
             <b-button
                 class="mt-3 mr-3"
                 variant="primary"
-                :disabled="newName === '' || $store.getters['folders/subFolderNames'].includes(newName)"
+                :disabled="newName.trim() === '' || $store.getters['folders/subFolderNames'].includes(newName.trim())"
                 @click="renameFolder"
             >
                 OK
@@ -55,7 +55,7 @@
             <b-button
                 class="mt-3"
                 variant="light"
-                @click="$bvModal.hide(folderId)"
+                @click="$bvModal.hide(renameFolderId)"
             >
                 Cancel
             </b-button>
@@ -79,7 +79,7 @@
             <b-button
                 class="mt-3 mr-3"
                 variant="primary"
-                :disabled="duplicateFolderName === '' || $store.getters['folders/subFolderNames'].includes(duplicateFolderName)"
+                :disabled="duplicateFolderName.trim() === '' || $store.getters['folders/subFolderNames'].includes(duplicateFolderName.trim())"
                 @click="duplicateFolder"
             >
                 OK

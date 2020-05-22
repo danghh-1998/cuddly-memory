@@ -3,6 +3,7 @@
         v-click-outside="handleFocusOutside"
         class="template"
         @click="handleFocus"
+        @dblclick="handleDoubleClick"
     >
         <div class="template-content">
             <div
@@ -21,6 +22,70 @@
                 </div>
             </div>
         </div>
+        <b-modal
+            :id="renameTemplateId"
+            hide-footer
+            centered
+        >
+            <template
+                #modal-title
+            >
+                Rename
+            </template>
+            <div class="d-block text-center">
+                <b-form-input
+                    v-model="newName"
+                    placeholder="Folder name"
+                />
+            </div>
+            <b-button
+                class="mt-3 mr-3"
+                variant="primary"
+                :disabled="newName.trim() === '' || $store.getters['folders/templateNames'].includes(newName.trim())"
+                @click="renameTemplate"
+            >
+                OK
+            </b-button>
+            <b-button
+                class="mt-3"
+                variant="light"
+                @click="$bvModal.hide(renameTemplateId)"
+            >
+                Cancel
+            </b-button>
+        </b-modal>
+        <b-modal
+            :id="duplicateTemplateId"
+            hide-footer
+            centered
+        >
+            <template
+                #modal-title
+            >
+                Duplicate template
+            </template>
+            <div class="d-block text-center">
+                <b-form-input
+                    v-model="duplicateTemplateName"
+                    placeholder="Folder name"
+                />
+            </div>
+            <b-button
+                class="mt-3 mr-3"
+                variant="primary"
+                :disabled="duplicateTemplateName.trim() === '' || $store.getters['folders/templateNames'].includes(duplicateTemplateName.trim())"
+                @click="duplicateTemplate"
+            >
+                OK
+            </b-button>
+            <b-button
+                class="mt-3"
+                variant="light"
+                @click="$bvModal.hide(duplicateTemplateId)"
+            >
+                Cancel
+            </b-button>
+        </b-modal>
     </div>
 </template>
 
@@ -44,10 +109,18 @@
         },
         data: function () {
             return {
-                templateFocus: false
+                templateFocus: false,
+                newName: this.$props.template.displayName,
+                duplicateTemplateName: `${this.$props.template.displayName}(Copy)`
             }
         },
         computed: {
+            renameTemplateId: function () {
+                return `modal-rename-template-${this.$props.template.id}`
+            },
+            duplicateTemplateId: function () {
+                return `modal-duplicate-template-${this.$props.template.id}`
+            },
             token: function () {
                 return localStorage.getItem("token");
             },
@@ -68,6 +141,32 @@
             },
             handleFocus: function () {
                 this.templateFocus = true
+            },
+            showRenameModal: function () {
+                this.$bvModal.show(this.renameTemplateId)
+            },
+            renameTemplate: function () {
+                this.$store.dispatch('folders/renameTemplate', {
+                    'id': this.template.id,
+                    'name': this.newName
+                })
+                this.$bvModal.hide(this.renameTemplateId)
+            },
+            showDuplicateModal: function () {
+                this.$bvModal.show(this.duplicateTemplateId)
+            },
+            handleDoubleClick: function () {
+                this.$store.dispatch('templates/fetchTemplate', this.template.id)
+                    .then(() => {
+                        this.$router.push({name: 'templates', params: {templateId: this.template.id}})
+                    })
+            },
+            duplicateTemplate: function () {
+                this.$store.dispatch('folders/duplicateTemplate', {
+                    templateId: this.$props.template.id,
+                    name: this.duplicateTemplateName
+                })
+                this.$bvModal.hide(this.duplicateTemplateId)
             }
         }
     }

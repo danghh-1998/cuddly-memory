@@ -150,10 +150,16 @@ class TemplateDuplicateApi(APIView):
 class TemplateDeleteApi(APIView):
     permission_classes = [AdminPermission, ]
 
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Template
+            exclude = ['deleted']
+
     def delete(self, request, template_id):
         template = get_templates_by(id=template_id).first()
         self.check_object_permissions(request=request, obj=template)
-        delete_template(template)
+        template = delete_template(template)
+        response_serializer = self.ResponseSerializer(template)
         return Response({
-
+            'template': response_serializer.data
         }, status=status.HTTP_200_OK)

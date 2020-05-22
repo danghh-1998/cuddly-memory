@@ -23,6 +23,7 @@ export default {
         } else {
             state.status = ''
             state.subFolders.push(payload.data.folder)
+            state.clipboard = null
         }
     },
     renameFolder: (state, payload) => {
@@ -44,6 +45,35 @@ export default {
         } else {
             state.status = ''
             state.subFolders.push(payload.data.folder)
+        }
+    },
+    deleteTemplate: (state, payload) => {
+        state.templates = state.templates.filter(template => template.id !== payload.data.template.id)
+    },
+    renameTemplate: (state, payload) => {
+        let targetTemplate = state.templates.find(template => template.id === payload.data.template.id)
+        targetTemplate.displayName = payload.data.template.displayName
+    },
+    copyTemplate: (state, payload) => {
+        state.clipboard = payload
+    },
+    pasteTemplate: (state, payload) => {
+        let code = payload.data.statusCode;
+        if (code === '606') {
+            state.status = 'DUPLICATED'
+        } else {
+            state.status = ''
+            state.templates.push(payload.data.template)
+            state.clipboard = null
+        }
+    },
+    duplicateTemplate: (state, payload) => {
+        let code = payload.data.statusCode;
+        if (code === '606') {
+            state.status = 'DUPLICATED'
+        } else {
+            state.status = ''
+            state.templates.push(payload.data.template)
         }
     }
 }

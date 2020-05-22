@@ -17,7 +17,9 @@
                     <span class="content-menu-text">Create new folder</span>
                 </v-contextmenu-item>
                 <v-contextmenu-item divider />
-                <v-contextmenu-item>
+                <v-contextmenu-item
+                    @click="$bvModal.show('create-template')"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'copy']"
                         class="content-menu-icon"
@@ -27,7 +29,7 @@
                 <v-contextmenu-item divider />
                 <v-contextmenu-item
                     :disabled="clipboard === null"
-                    @click="pasteFolder"
+                    @click="pasteObject"
                 >
                     <font-awesome-icon
                         :icon="['fas', 'paste']"
@@ -69,6 +71,47 @@
                 Cancel
             </b-button>
         </b-modal>
+        <b-modal
+            id="create-template"
+            hide-footer
+            centered
+        >
+            <template
+                #modal-title
+            >
+                Create new template
+            </template>
+            <div class="d-block text-center">
+                <b-form-input
+                    v-model="templateName"
+                    placeholder="Template name"
+                />
+            </div>
+
+            <b-form-file
+                v-model="file"
+                :state="Boolean(file)"
+                class="mt-4"
+                placeholder="Upload template image"
+                drop-placeholder="Drop file here"
+                accept=".jpg .png .jpeg"
+            />
+            <b-button
+                class="mt-3 mr-3"
+                variant="primary"
+                :disabled="templateName === '' || $store.getters['folders/templates'].includes(templateName)"
+                @click="createTemplate"
+            >
+                OK
+            </b-button>
+            <b-button
+                class="mt-3"
+                variant="light"
+                @click="$bvModal.hide('create-template')"
+            >
+                Cancel
+            </b-button>
+        </b-modal>
     </div>
 </template>
 
@@ -82,7 +125,9 @@
         name: "GlobalContextMenu",
         data: function () {
             return {
-                folderName: ''
+                folderName: '',
+                templateName: '',
+                file: null
             }
         },
         computed: {
@@ -106,7 +151,14 @@
                 })
                 this.$bvModal.hide('create-folder')
             },
-            pasteFolder: function() {
+            pasteObject: function () {
+                if (this.$store.getters['folders/clipboard'].type === 'FOLDER') {
+                    this.pasteFolder()
+                } else {
+                    this.pasteTemplate()
+                }
+            },
+            pasteFolder: function () {
                 this.$store.dispatch('folders/pasteFolder', {
                     'folderId': this.$store.getters['folders/id'],
                     'clipboard': this.$store.getters['folders/clipboard']
@@ -120,6 +172,28 @@
                         }
                     })
             },
+            pasteTemplate: function () {
+                this.$store.dispatch('folders/pasteTemplate', {
+                    'folderId': this.$store.getters['folders/id'],
+                    'clipboard': this.$store.getters['folders/clipboard']
+                })
+                    .then(() => {
+                        let status = this.$store.getters['folders/status'];
+                        if (status === 'DUPLICATED') {
+                            this.makeToast('Duplicate template name')
+                        }
+                    })
+            },
+            createTemplate: function () {
+                this.$store.dispatch('templates/uploadTemplate', {
+                    file: this.file,
+                    templateName: this.templateName
+                })
+                    .then(() => {
+                        this.$bvModal.hide('create-template')
+                        this.$router.push('/templates')
+                    })
+            }
         }
     }
 </script>
@@ -139,6 +213,7 @@
         display: inline-block;
         margin-right: 20px;
     }
+
     .global-context-menu {
         height: 100%;
     }
