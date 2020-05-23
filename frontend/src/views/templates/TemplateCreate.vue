@@ -8,9 +8,9 @@
                     variant="primary"
                     class="d-inline-block mr-2 template-button"
                     :disabled="!canCreate"
-                    @click="updateTemplate"
+                    @click="createTemplate"
                 >
-                    Save
+                    Create template
                 </b-button>
             </div>
         </div>
@@ -36,12 +36,13 @@
                         :guides="false"
                         :center="false"
                         :min-container-height="600"
+                        :auto-crop="true"
                         :auto-crop-size="0"
                         class="cropper"
                         :responsive="true"
                         :restore="false"
-                        @ready="ready"
                         @cropend="cropend"
+                        @zoom="zoom"
                     />
                 </b-col>
                 <b-col
@@ -52,10 +53,7 @@
                     cols="12"
                     class="col-scroll col"
                 >
-                    <vuescroll
-                        :key="forceUpdate"
-                        :ops="ops"
-                    >
+                    <vuescroll :ops="ops">
                         <div
                             v-if="isNoContent"
                             class="no-content"
@@ -104,7 +102,7 @@
     import AppNavBar from "@/components/AppNavBar";
     import CroppedImg from "@/components/templates/CroppedImg";
     import vuescroll from 'vuescroll';
-
+    import dataUrlToBlob from "@/utils/dataUrlToBlob";
 
     export default {
         name: "TemplateCreate",
@@ -117,7 +115,7 @@
         data: function () {
             return {
                 imgSrc: this.$store.getters['templates/image'],
-                boundingBoxes: this.$store.getters['templates/boundingBoxes'],
+                boundingBoxes: [],
                 ops: {
                     vuescroll: {},
                     scrollPanel: {},
@@ -127,8 +125,7 @@
                         keepShow: false,
                     }
                 },
-                focusedId: null,
-                forceUpdate: 0,
+                focusedId: 0,
                 emptyImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
             };
         },
@@ -173,7 +170,7 @@
                 this.focusedId = null
             },
             updateBoundingBox: function () {
-                if (this.boundingBoxes.length !== 0) {
+                if (!(this.boundingBoxes.length === 0 || this.focusedId === null)) {
                     let boundingBox = this.boundingBoxes[this.boundingBoxes.length - this.focusedId - 1]
                     boundingBox.data = this.getData()
                     boundingBox.image = this.getImage()
@@ -196,8 +193,9 @@
                 this.boundingBoxes.splice(this.boundingBoxes.length - boundingBox.id - 1, 1)
                 this.$refs.cropper.reset()
             },
-            updateTemplate: function () {
+            createTemplate: function () {
                 let convertedBoundingBoxes = []
+                let blobImage = dataUrlToBlob.dataURItoBlob(this.$store.getters['templates/image'])
                 this.boundingBoxes.forEach(boundingBox => {
                     let data = JSON.parse(boundingBox.data)
                     let convertedData = [
@@ -208,33 +206,29 @@
                         {
                             x: data.x + data.width,
                             y: data.y + data.height
-                        }
+                        },
                     ]
-                    convertedBoundingBoxes.unshift(
+                    convertedBoundingBoxes.push(
                         {
-                            "metadata": convertedData,
+                            metadata: convertedData,
                             recognize_type: boundingBox.type
                         }
                     )
                 })
-                this.$store.dispatch('templates/updateTemplate', {
-                    bounding_boxes: convertedBoundingBoxes,
-                    templateId: this.$store.getters['templates/id']
+                this.$store.dispatch('templates/createTemplate', {
+                    image: blobImage,
+                    name: this.$store.getters['templates/name'],
+                    folder_id: this.$store.getters['folders/id'],
+                    bounding_boxes: convertedBoundingBoxes
                 })
                     .then(() => {
                         this.$router.push(`/folders/${this.$store.getters['folders/id']}`)
                     })
             },
-            ready: function () {
-                this.boundingBoxes.forEach((boundingBox, index) => {
-                    this.$refs.cropper.setData(JSON.parse(boundingBox.data))
-                    boundingBox.image = this.$refs.cropper.getCroppedCanvas().toDataURL()
-                    this.$set(this.boundingBoxes, index, boundingBox)
-                })
-                this.forceUpdate += 1
-                this.$refs.cropper.reset()
-            },
             cropend: function () {
+                this.updateBoundingBox()
+            },
+            zoom: function () {
                 this.updateBoundingBox()
             }
         }

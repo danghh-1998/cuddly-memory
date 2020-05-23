@@ -91,13 +91,19 @@
                     cols="6"
                 >
                     <grid-template
+                        ref="templates"
                         v-contextmenu:contextmenutemplate
                         :template="template"
                     />
                 </b-col>
             </b-row>
-            <v-contextmenu ref="contextmenutemplate">
-                <v-contextmenu-item>
+            <v-contextmenu
+                ref="contextmenutemplate"
+                @contextmenu="handleContextMenu"
+            >
+                <v-contextmenu-item
+                    @click="openTemplate"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'folder-open']"
                         class="content-menu-icon"
@@ -113,7 +119,9 @@
                     <span class="content-menu-text">Create task</span>
                 </v-contextmenu-item>
                 <v-contextmenu-item divider />
-                <v-contextmenu-item>
+                <v-contextmenu-item
+                    @click="copyTemplate"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'copy']"
                         class="content-menu-icon"
@@ -121,7 +129,9 @@
                     <span class="content-menu-text">Copy</span>
                 </v-contextmenu-item>
                 <v-contextmenu-item divider />
-                <v-contextmenu-item>
+                <v-contextmenu-item
+                    @click="renameTemplate"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'pen']"
                         class="content-menu-icon"
@@ -129,7 +139,19 @@
                     <span class="content-menu-text">Rename</span>
                 </v-contextmenu-item>
                 <v-contextmenu-item divider />
-                <v-contextmenu-item>
+                <v-contextmenu-item
+                    @click="duplicateTemplate"
+                >
+                    <font-awesome-icon
+                        :icon="['fas', 'clone']"
+                        class="content-menu-icon"
+                    />
+                    <span class="content-menu-text">Duplicate template</span>
+                </v-contextmenu-item>
+                <v-contextmenu-item divider />
+                <v-contextmenu-item
+                    @click="deleteTemplate"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'trash-alt']"
                         class="content-menu-icon"
@@ -193,7 +215,7 @@
             }
         },
         watch: {
-            '$route' (to, from) {
+            '$route'(to, from) {
                 this.$store.dispatch('folders/fetchFolders', this.$route.params.folderId)
             }
         },
@@ -201,23 +223,52 @@
             this.$store.dispatch('folders/fetchFolders', this.$route.params.folderId)
         },
         methods: {
-            openFolder: function() {
+            openFolder: function () {
                 this.$router.push({name: 'folders', params: {folderId: this.targetObject.id}})
             },
             handleContextMenu: function (vm) {
-                this.targetObject = vm.componentInstance.folder
+                let instance = vm.componentInstance
+                if (instance.folder) {
+                    this.targetObject = instance.folder
+                } else {
+                    this.targetObject = instance.template
+                }
             },
-            copyFolder: function() {
-                this.$store.dispatch('folders/copyFolder', this.targetObject)
+            copyFolder: function () {
+                this.$store.dispatch('folders/copyFolder', {
+                    type: 'FOLDER',
+                    object: this.targetObject
+                })
             },
-            renameFolder: function() {
+            renameFolder: function () {
                 this.$refs.folders.find((ref) => ref.folder.id === this.targetObject.id).showRenameModal()
             },
-            deleteFolder: function() {
+            deleteFolder: function () {
                 this.$store.dispatch('folders/deleteFolder', this.targetObject)
             },
-            duplicateFolder: function() {
+            duplicateFolder: function () {
                 this.$refs.folders.find((ref) => ref.folder.id === this.targetObject.id).showDuplicateModal()
+            },
+            openTemplate: function () {
+                this.$store.dispatch('templates/fetchTemplate', this.targetObject.id)
+                    .then(() => {
+                        this.$router.push({name: 'templates', params: {templateId: this.targetObject.id}})
+                    })
+            },
+            deleteTemplate: function () {
+                this.$store.dispatch('folders/deleteTemplate', this.targetObject)
+            },
+            renameTemplate: function () {
+                this.$refs.templates.find((ref) => ref.template.id === this.targetObject.id).showRenameModal()
+            },
+            copyTemplate: function () {
+                this.$store.dispatch('folders/copyTemplate', {
+                    type: 'TEMPLATE',
+                    object: this.targetObject
+                })
+            },
+            duplicateTemplate: function () {
+                this.$refs.templates.find((ref) => ref.template.id === this.targetObject.id).showDuplicateModal()
             }
         }
     }
@@ -227,18 +278,22 @@
     .folder-item {
         margin-bottom: 20px;
     }
+
     .v-contextmenu-item {
         padding: 12px;
     }
+
     .content-menu-icon {
         color: #565656;
         display: inline-block;
         margin-right: 20px;
     }
+
     .content-menu-text {
         display: inline-block;
         margin-right: 20px;
     }
+
     .content-menu {
     }
 </style>

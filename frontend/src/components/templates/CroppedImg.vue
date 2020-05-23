@@ -3,6 +3,8 @@
         <div
             :class="{'cropped-area': true, 'focused': $props.focused}"
             @click="showBoundingBox"
+            @mouseenter="overlayShow = true"
+            @mouseleave="overlayShow = false"
         >
             <div class="cropped">
                 <img
@@ -10,13 +12,42 @@
                     alt="Crop image"
                 >
             </div>
+            <div class="overlay">
+                <b-overlay
+                    :id="overlayId"
+                    :show="overlayShow"
+                    variant="light"
+                    :opacity="0.6"
+                    blur="5px"
+                    rounded="sm"
+                    class="d-inline-block"
+                >
+                    <template #overlay>
+                        <b-button
+                            size="sm"
+                            @click="deleteBoundingBox"
+                        >
+                            Delete
+                        </b-button>
+                    </template>
+                </b-overlay>
+            </div>
         </div>
-        <b-form-select
-            v-model="selected"
-            :options="options"
-            class="mt-2 form-select"
-            @change="updateType"
-        />
+        <b-form inline>
+            <label
+                class="mr-1 ml-3 cropped-title"
+                :for="boundingBoxId"
+            >
+                Recognize type
+            </label>
+            <b-form-select
+                :id="boundingBoxId"
+                v-model="selected"
+                :options="options"
+                class="mt-2 form-select"
+                @change="updateType"
+            />
+        </b-form>
     </div>
 </template>
 
@@ -35,7 +66,7 @@
         },
         data: function () {
             return {
-                selected: 0,
+                selected: this.$props.boundingBox.type,
                 options: [
                     {
                         value: 0,
@@ -47,17 +78,41 @@
                     },
                     {
                         value: 2,
+                        text: "English multiple line"
+                    },
+                    {
+                        value: 3,
+                        text: "Vietnam multiple line"
+                    },
+                    {
+                        value: 4,
+                        text: "Digit"
+                    },
+                    {
+                        value: 5,
                         text: "Checkbox"
                     }
-                ]
+                ],
+                overlayShow: false
+            }
+        },
+        computed: {
+            boundingBoxId: function () {
+                return `inline-form-custom-select-pref-${this.$props.boundingBox.id}`
+            },
+            overlayId: function () {
+                return `overlay-background-${this.$props.boundingBox.id}`
             }
         },
         methods: {
             showBoundingBox: function () {
-                this.$emit('showBoundingBox', this.boundingBox.data, this.boundingBox.id)
+                this.$emit('showBoundingBox', this.$props.boundingBox)
             },
             updateType: function () {
                 this.$emit('updateType', this.boundingBox.id, this.selected)
+            },
+            deleteBoundingBox: function () {
+                this.$emit('deleteBoundingBox', this.$props.boundingBox)
             }
         }
     }
@@ -77,6 +132,8 @@
         height: 320px;
         margin: 0 auto;
         background-color: #BBBBBB;
+        border-radius: 10px;
+        position: relative;
     }
 
     .cropped {
@@ -98,7 +155,18 @@
     }
 
     .form-select {
-        width: 96%;
+        width: 80%;
         margin-left: 1rem;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 5px;
+        right: 40px;
+    }
+
+    .cropped-title {
+        position: relative;
+        top: 5px;
     }
 </style>

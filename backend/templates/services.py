@@ -18,13 +18,14 @@ def validate_bounding_boxes(data):
             "type": "object",
             "properties": {
                 "metadata": {
-                    "type": "object",
-                    "properties": {
+                    "type": "array",
+                    "max_items": 2,
+                    "items": {
                         "metadata": {
                             "type": "object",
                             "properties": {
-                                "x": {"type": "integer"},
-                                "y": {"type": "integer"},
+                                "x": {"type": "number"},
+                                "y": {"type": "number"},
                             }
                         },
                         "recognize_type": {"type": "integer"}
@@ -139,3 +140,4 @@ def duplicate_template(template, **kwargs):
 
 def delete_template(template):
     template.delete()
+    return template

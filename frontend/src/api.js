@@ -1,7 +1,7 @@
 import axios from 'axios'
 import camelcaseKeys from "camelcase-keys";
 
-let api = axios.create({
+export const api = axios.create({
     baseURL: 'http://localhost:8000/api',
     transformResponse: [data => {
         if (data) {
@@ -10,4 +10,7 @@ let api = axios.create({
     }]
 });
 
-export default api
+export const imageApi = axios.create({
+    baseURL: 'http://localhost:8000/api',
+    responseType: "blob"
+});

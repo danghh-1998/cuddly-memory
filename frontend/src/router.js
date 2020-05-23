@@ -7,6 +7,7 @@ import ResetPassword from "@/views/auth/ResetPassword";
 import Folder from "@/views/folders/Folder";
 import Profile from "@/views/auth/Profile";
 import Template from "@/views/templates/Template";
+import TemplateCreate from "@/views/templates/TemplateCreate";
 
 let routes = [
     {
@@ -69,6 +70,15 @@ let routes = [
     },
     {
         path: '/templates',
+        name: 'create-template',
+        component: TemplateCreate,
+        meta: {
+            requireAuth: true,
+            title: 'Create template'
+        }
+    },
+    {
+        path: '/templates/:templateId',
         name: 'templates',
         component: Template,
         meta: {
