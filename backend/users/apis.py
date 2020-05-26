@@ -20,8 +20,8 @@ class SignInApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
-                      'updated_at']
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -41,8 +41,8 @@ class UserDetailApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
-                      'updated_at']
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
 
     def get(self, request, user_id):
         user = get_user_by(id=user_id)
@@ -61,8 +61,8 @@ class UserUpdateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
-                      'updated_at']
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
 
     def put(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -82,13 +82,32 @@ class UserDeactivateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
-                      'updated_at']
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
 
-    def delete(self, request):
-        user = get_user_by(id=request.user.id)
+    def delete(self, request, user_id):
+        user = get_user_by(id=user_id)
         self.check_object_permissions(request=request, obj=user)
-        user = deactivate_user(user)
+        user = deactivate(user)
+        response_serializer = self.ResponseSerializer(user)
+        return Response({
+            'user': response_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class UserActivateApi(APIView):
+    permission_classes = [UserPermission, ]
+
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
+
+    def put(self, request, user_id):
+        user = get_user_by(id=user_id, with_deleted=True)
+        self.check_object_permissions(request=request, obj=user)
+        user = activate(user)
         response_serializer = self.ResponseSerializer(user)
         return Response({
             'user': response_serializer.data
@@ -158,8 +177,8 @@ class UserCreateApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ['id', 'name', 'email', 'birthday', 'role', 'tel', 'change_init_password', 'created_at',
-                      'updated_at']
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -172,6 +191,24 @@ class UserCreateApi(APIView):
         response_serializer = self.ResponseSerializer(user)
         return Response({
             'user': response_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class UserListSubUserApi(APIView):
+    permission_classes = [AdminPermission, ]
+
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ['id', 'name', 'email', 'deleted', 'birthday', 'role', 'admin', 'tel', 'change_init_password',
+                      'created_at', 'updated_at']
+
+    def get(self, request):
+        self.check_permissions(request=request)
+        users = get_sub_users(request.user)
+        response_serializer = self.ResponseSerializer(users, many=True)
+        return Response({
+            'users': response_serializer.data
         }, status=status.HTTP_200_OK)
 
 

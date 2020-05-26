@@ -46,6 +46,12 @@
                             Profile
                         </b-dropdown-item>
                         <b-dropdown-item
+                            v-if="accessManagement"
+                            href="/user-management"
+                        >
+                            User management
+                        </b-dropdown-item>
+                        <b-dropdown-item
                             href="#"
                             @click="signOut"
                         >
@@ -64,6 +70,10 @@
         computed: {
             routeName: function () {
                 return this.$route.name;
+            },
+            accessManagement: function () {
+                let role = this.$store.getters['auth/user'].role;
+                return (role === 'admin') || (role === 'superadmin')
             }
         },
         methods: {

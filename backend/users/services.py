@@ -36,6 +36,13 @@ def update_user(user, data):
     return user
 
 
+def deactivate(user):
+    if user.role == 0:
+        return deactivate_user(user)
+    elif user.role == 1:
+        return deactivate_admin(user)
+
+
 def deactivate_user(user):
     expire_token(user=user)
     user.is_active = False
@@ -44,7 +51,14 @@ def deactivate_user(user):
     return user
 
 
-def activate_user(user):
+def deactivate_admin(admin):
+    for user in admin.sub_users.all():
+        deactivate_user(user=user)
+    return deactivate_user(user=admin)
+
+
+def activate(user):
+    user.undelete()
     user.is_active = True
     user.save(update_fields=['is_active'])
     return user
@@ -94,11 +108,21 @@ def authenticate_user(email, password):
     return auth_token
 
 
-def get_user_by(raise_exception=True, only_deleted=False, **kwargs):
-    if only_deleted:
-        user = User.objects.deleted_only().filter(**kwargs).first()
+def get_user_by(raise_exception=True, with_deleted=False, **kwargs):
+    if with_deleted:
+        user = User.objects.all_with_deleted().filter(**kwargs).first()
     else:
         user = User.objects.filter(**kwargs).first()
     if not user and raise_exception:
         raise Unauthenticated
     return user
+
+
+def get_sub_users(user):
+    from clients.services import get_client_by
+    if user.role == 1:
+        return User.objects.all_with_deleted().filter(admin=user).all()
+    elif user.role == 2:
+        client = get_client_by(id=user.client.id)
+        return list(filter(lambda item: item.role != 2,
+                           User.objects.all_with_deleted().filter(client=client).all()))
