@@ -11,7 +11,10 @@
                 :style="thumbnailBackgroundImage"
             />
             <div :class="{'template-footer-wrapper': true, 'template-focus': templateFocus}">
-                <div class="template-footer">
+                <div
+                    :id="tooltipTemplateId"
+                    class="template-footer"
+                >
                     <font-awesome-icon
                         :icon="['fas', 'file-alt']"
                         class="template-icon"
@@ -20,6 +23,12 @@
                         {{ template.displayName }}
                     </span>
                 </div>
+                <b-tooltip
+                    :target="tooltipTemplateId"
+                    triggers="hover"
+                >
+                    {{ template.displayName }}
+                </b-tooltip>
             </div>
         </div>
         <b-modal
@@ -120,6 +129,9 @@
             },
             duplicateTemplateId: function () {
                 return `modal-duplicate-template-${this.$props.template.id}`
+            },
+            tooltipTemplateId: function () {
+                return `tooltip-template-${this.$props.template.id}`
             },
             token: function () {
                 return localStorage.getItem("token");

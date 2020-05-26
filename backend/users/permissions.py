@@ -10,12 +10,15 @@ class OwnerPermission(BasePermission):
 class UserPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
         current_user = request.user
-        if current_user == obj:
+        if current_user.role == 3:
             return True
-        elif current_user.role == 3:
+        elif current_user.role == 2:
+            return current_user.client == obj.client
+        elif current_user.role == 1:
+            return current_user == obj.admin
+        elif current_user == obj:
             return True
-        else:
-            return current_user.role >= obj.role and current_user.client == obj.client
+        return False
 
 
 class AdminPermission(BasePermission):

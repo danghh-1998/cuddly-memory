@@ -58,5 +58,34 @@ export default {
             .then((res) => {
                 context.commit('updateProfile', res)
             })
+    },
+    listSubUsers: context => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.get(`users/sub_users`)
+            .then((res) => {
+                context.commit('listSubUsers', res)
+            })
+    },
+    deactivateUser: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.delete(`users/${payload}/deactivate`)
+            .then((res) => {
+                context.commit('deactivateUser', res)
+            })
+    },
+    activateUser: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.put(`users/${payload}/activate`)
+            .then((res) => {
+                context.commit('activateUser', res)
+            })
+    },
+    createUser: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        context.commit('submit');
+        return api.post(`users/create`, payload)
+            .then((res) => {
+                context.commit('createUser', res)
+            })
     }
 }

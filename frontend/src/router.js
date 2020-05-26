@@ -8,6 +8,7 @@ import Folder from "@/views/folders/Folder";
 import Profile from "@/views/auth/Profile";
 import Template from "@/views/templates/Template";
 import TemplateCreate from "@/views/templates/TemplateCreate";
+import Management from "@/views/auth/Management";
 
 let routes = [
     {
@@ -15,7 +16,8 @@ let routes = [
         name: 'sign-in',
         component: SignIn,
         meta: {
-            title: 'Sign in'
+            title: 'Sign in',
+            requireRoles: ['guest']
         }
     },
     {
@@ -23,7 +25,8 @@ let routes = [
         name: 'sign-up',
         component: SignUp,
         meta: {
-            title: 'Sign up'
+            title: 'Sign up',
+            requireRoles: ['guest']
         }
     },
     {
@@ -31,7 +34,8 @@ let routes = [
         name: 'change-init-password',
         component: ChangeInitPassword,
         meta: {
-            title: 'Change password'
+            title: 'Change password',
+            requireRoles: ['guest']
         }
     },
     {
@@ -39,7 +43,8 @@ let routes = [
         name: 'req-reset-password',
         component: RequestResetPassword,
         meta: {
-            title: 'Forgot password'
+            title: 'Forgot password',
+            requireRoles: ['guest']
         }
     },
     {
@@ -47,7 +52,8 @@ let routes = [
         name: 'reset-password',
         component: ResetPassword,
         meta: {
-            title: 'Reset password'
+            title: 'Reset password',
+            requireRoles: ['guest']
         }
     },
     {
@@ -55,8 +61,8 @@ let routes = [
         name: 'folders',
         component: Folder,
         meta: {
-            requireAuth: true,
-            title: 'Template'
+            title: 'Template',
+            requireRoles: ['user', 'admin']
         }
     },
     {
@@ -64,8 +70,8 @@ let routes = [
         name: 'profile',
         component: Profile,
         meta: {
-            requireAuth: true,
-            title: 'Profile'
+            title: 'Profile',
+            requireRoles: ['user', 'admin', 'superadmin']
         }
     },
     {
@@ -73,8 +79,8 @@ let routes = [
         name: 'create-template',
         component: TemplateCreate,
         meta: {
-            requireAuth: true,
-            title: 'Create template'
+            title: 'Create template',
+            requireRoles: ['admin']
         }
     },
     {
@@ -82,20 +88,31 @@ let routes = [
         name: 'templates',
         component: Template,
         meta: {
-            requireAuth: true,
-            title: 'Template'
+            title: 'Template',
+            requireRoles: ['user', 'admin']
+        }
+    },
+    {
+        path: '/user-management',
+        name: 'user-management',
+        component: Management,
+        meta: {
+            title: 'User management',
+            requireRoles: ['admin', 'superadmin']
         }
     }
 ];
 
 const router = new VueRouter({mode: 'history', routes});
 router.beforeEach((to, from, next) => {
-    let token = localStorage.getItem('token');
-    const requireAuth = to.matched.some(route => route.meta.requireAuth);
-    if (requireAuth && !token) {
+    let vuex = JSON.parse(localStorage.getItem('vuex'))
+    let role = 'guest'
+    if (vuex) {
+        role = vuex.auth.user.role
+    }
+    const requireRoles = to.matched.some(route => route.meta.requireRoles.includes(role));
+    if (!requireRoles) {
         return next('/sign-in');
-    } else if (token && !requireAuth && to.path !== '/folders/0') {
-        return next();
     }
     document.title = to.meta.title
     return next();

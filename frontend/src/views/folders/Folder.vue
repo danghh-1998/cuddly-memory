@@ -35,46 +35,50 @@
                     />
                     <span class="content-menu-text">Open</span>
                 </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="copyFolder"
+                <div
+                    :class="{hidden: $store.getters['auth/role'] !== 'admin'}"
                 >
-                    <font-awesome-icon
-                        :icon="['fas', 'copy']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Copy</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="renameFolder"
-                >
-                    <font-awesome-icon
-                        :icon="['fas', 'pen']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Rename</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="duplicateFolder"
-                >
-                    <font-awesome-icon
-                        :icon="['fas', 'clone']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Duplicate folder</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="deleteFolder"
-                >
-                    <font-awesome-icon
-                        :icon="['fas', 'trash-alt']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Delete</span>
-                </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="copyFolder"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'copy']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Copy</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="renameFolder"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'pen']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Rename</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="duplicateFolder"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'clone']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Duplicate folder</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="deleteFolder"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'trash-alt']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Delete</span>
+                    </v-contextmenu-item>
+                </div>
             </v-contextmenu>
         </template>
         <template
@@ -110,54 +114,62 @@
                     />
                     <span class="content-menu-text">Open</span>
                 </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item>
-                    <font-awesome-icon
-                        :icon="['fas', 'file-invoice']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Create task</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="copyTemplate"
+                <div
+                    :class="{hidden: $store.getters['auth/role'] !== 'user'}"
                 >
-                    <font-awesome-icon
-                        :icon="['fas', 'copy']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Copy</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="renameTemplate"
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item>
+                        <font-awesome-icon
+                            :icon="['fas', 'file-invoice']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Create task</span>
+                    </v-contextmenu-item>
+                </div>
+                <div
+                    :class="{hidden: $store.getters['auth/role'] !== 'admin'}"
                 >
-                    <font-awesome-icon
-                        :icon="['fas', 'pen']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Rename</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="duplicateTemplate"
-                >
-                    <font-awesome-icon
-                        :icon="['fas', 'clone']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Duplicate template</span>
-                </v-contextmenu-item>
-                <v-contextmenu-item divider />
-                <v-contextmenu-item
-                    @click="deleteTemplate"
-                >
-                    <font-awesome-icon
-                        :icon="['fas', 'trash-alt']"
-                        class="content-menu-icon"
-                    />
-                    <span class="content-menu-text">Delete</span>
-                </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="copyTemplate"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'copy']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Copy</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="renameTemplate"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'pen']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Rename</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="duplicateTemplate"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'clone']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Duplicate template</span>
+                    </v-contextmenu-item>
+                    <v-contextmenu-item divider />
+                    <v-contextmenu-item
+                        @click="deleteTemplate"
+                    >
+                        <font-awesome-icon
+                            :icon="['fas', 'trash-alt']"
+                            class="content-menu-icon"
+                        />
+                        <span class="content-menu-text">Delete</span>
+                    </v-contextmenu-item>
+                </div>
             </v-contextmenu>
         </template>
     </folder-layout>
@@ -215,7 +227,7 @@
             }
         },
         watch: {
-            '$route'(to, from) {
+            '$route'() {
                 this.$store.dispatch('folders/fetchFolders', this.$route.params.folderId)
             }
         },
@@ -295,5 +307,9 @@
     }
 
     .content-menu {
+    }
+
+    .hidden {
+        display: none;
     }
 </style>

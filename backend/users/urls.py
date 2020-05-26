@@ -5,10 +5,12 @@ urlpatterns = [
     path('auth/sign_in', SignInApi.as_view(), name='sign_in'),
     path('users/<int:user_id>', UserDetailApi.as_view(), name='user_detail'),
     path('users/update', UserUpdateApi.as_view(), name='user_update'),
-    path('users/deactivate', UserDeactivateApi.as_view(), name='user_deactivate'),
+    path('users/<int:user_id>/deactivate', UserDeactivateApi.as_view(), name='user_deactivate'),
+    path('users/<int:user_id>/activate', UserActivateApi.as_view(), name='user_activate'),
     path('users/change_password', UserChangePasswordApi.as_view(), name='user_change_password'),
     path('users/req_reset_password', UserRequestResetPasswordApi.as_view(), name='user_req_reset_password'),
     path('users/reset_password', UserResetPassword.as_view(), name='user_reset_password'),
-    path('users/create_user', UserCreateApi.as_view(), name='create_user'),
+    path('users/create', UserCreateApi.as_view(), name='create_user'),
+    path('users/sub_users', UserListSubUserApi.as_view(), name='list_sub_users'),
     path('users/sign_out', UserSignOutApi.as_view(), name='sign_out')
 ]

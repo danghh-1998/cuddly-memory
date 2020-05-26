@@ -221,6 +221,16 @@
                     variant: 'danger'
                 })
             },
+            resetForm: function () {
+                this.form = {
+                    name: null,
+                    email: null,
+                    tel: null,
+                    clientName: null,
+                    address: null,
+                    birthday: null
+                }
+            },
             signUp: function () {
                 this.$v.form.$touch();
                 if (this.$v.form.$anyError) {
