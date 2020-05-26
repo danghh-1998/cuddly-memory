@@ -103,11 +103,11 @@ CREATE DATABASE project CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 - Đăng ký tài khoản SendGrid tại <https://app.sendgrid.com/>
 - Trong phần __Settings__ vào mục __API Keys__ sau đó nhấn vào nút __Create API Key__ phía trên bên phải
 
-![Create Key](https://raw.githubusercontent.com/danghh-1998/symmetrical-happiness/danghh_5/screenshots/sendgrid-create-api-key.png)
+![Create Key](https://raw.githubusercontent.com/danghh-1998/cuddly-memory/danghh_5/screenshots/sendgrid-create-api-key.png)
 
 - Điền đây đủ thông thông tin sau đó chọn __Create & View__
 
-![Review key](https://raw.githubusercontent.com/danghh-1998/symmetrical-happiness/danghh_5/screenshots/sendgrid-review-api-key.png)
+![Review key](https://raw.githubusercontent.com/danghh-1998/cuddly-memory/danghh_5/screenshots/sendgrid-review-api-key.png)
 
 - Lưu lại __API Key__ sau đó chọn __Done__
 
@@ -181,7 +181,7 @@ npm run serve
 - Mặc định frontend chạy ở __localhost:8080__
 - Mở trình duyệt, truy cập __localhost:8080__
 
-![Auth](https://raw.githubusercontent.com/danghh-1998/symmetrical-happiness/danghh_5/screenshots/auth.png)
+![Auth](https://raw.githubusercontent.com/danghh-1998/cuddly-memory/danghh_5/screenshots/auth.png)
 
 ---
 
