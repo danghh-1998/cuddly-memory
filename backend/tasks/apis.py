@@ -2,17 +2,16 @@ from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer
 
 from .services import *
 from .models import Task
 from templates.models import Template
 from images.models import Image
+from results.models import Result
 from .permissions import *
 from utils.serializer_validator import validate_serializer
 from utils.custom_renderer import PNGRenderer
 from utils.static_file_handler import file_downloader
-from bounding_boxes.models import BoundingBox
 
 
 class TaskCreateApi(APIView):
@@ -127,17 +126,50 @@ class TaskListImagesApi(APIView):
     permission_classes = (OwnerPermission,)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class ResultSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Result
+                fields = ['id', 'result', 'confirm_result']
+
+        results = ResultSerializer(many=True)
+
         class Meta:
             model = Image
-            fields = ['image', 'name']
+            fields = ['id', 'image', 'name', 'results']
 
     def get(self, request, task_id):
         task = get_tasks_by(id=task_id).first()
         self.check_object_permissions(request=request, obj=task)
+        check_task_done(task)
         images = task.images.all()
         response_serializer = self.ResponseSerializer(images, many=True)
         return Response({
             'images': response_serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class TaskConfirmResultApi(APIView):
+    permission_classes = (OwnerPermission,)
+
+    class RequestSerializer(serializers.Serializer):
+        image_id = serializers.IntegerField(required=True)
+        result_id = serializers.IntegerField(required=True)
+        confirm_result = serializers.CharField(required=True)
+
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Result
+            fields = ['id', 'result', 'confirm_result']
+
+    def put(self, request, task_id):
+        task = get_tasks_by(id=task_id).first()
+        request_serializer = self.RequestSerializer(data=request.data)
+        validate_serializer(serializer=request_serializer)
+        self.check_object_permissions(request=request, obj=task)
+        result = confirm_task_result(**request_serializer.validated_data)
+        response_serializer = self.ResponseSerializer(result)
+        return Response({
+            'result': response_serializer.data
         }, status=status.HTTP_200_OK)
 
 
@@ -150,35 +182,6 @@ class TaskDownloadImageApi(APIView):
         self.check_object_permissions(request=request, obj=task)
         image = file_downloader(file_name=image_name, _type='images')
         return Response(image, status=status.HTTP_200_OK)
-
-
-class TaskGetMetadataApi(APIView):
-    permission_classes = (OwnerPermission,)
-
-    class ResponseSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = BoundingBox
-            fields = ['metadata', 'recognize_type']
-
-    def get(self, request, task_id):
-        task = get_tasks_by(id=task_id).first()
-        self.check_object_permissions(request=request, obj=task)
-        bounding_boxes = task.template.bounding_boxes.all()
-        response_serializer = self.ResponseSerializer(bounding_boxes, many=True)
-        return Response({
-            'bounding_boxes': response_serializer.data
-        }, status=status.HTTP_200_OK)
-
-
-class TaskDownloadResult(APIView):
-    permission_classes = (OwnerPermission,)
-    renderer_classes = (JSONRenderer,)
-
-    def get(self, request, task_id):
-        task = get_tasks_by(id=task_id).first()
-        self.check_object_permissions(request=request, obj=task)
-        json_result = get_task_results(task=task)
-        return Response(json_result, status=status.HTTP_200_OK)
 
 
 class TaskDeleteApi(APIView):
