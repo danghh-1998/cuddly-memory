@@ -118,7 +118,9 @@
                     :class="{hidden: $store.getters['auth/role'] !== 'user'}"
                 >
                     <v-contextmenu-item divider />
-                    <v-contextmenu-item>
+                    <v-contextmenu-item
+                        @click="$bvModal.show('create-task')"
+                    >
                         <font-awesome-icon
                             :icon="['fas', 'file-invoice']"
                             class="content-menu-icon"
@@ -171,6 +173,41 @@
                     </v-contextmenu-item>
                 </div>
             </v-contextmenu>
+            <b-modal
+                id="create-task"
+                hide-footer
+                centered
+            >
+                <template
+                    #modal-title
+                >
+                    Create task
+                </template>
+                <div>
+                    <b-form-file
+                        v-model="taskFile"
+                        :state="Boolean(taskFile)"
+                        class="mt-4"
+                        placeholder="Upload images"
+                        drop-placeholder="Drop file here"
+                        accept=".jpg .png .jpeg .zip"
+                    />
+                </div>
+                <b-button
+                    class="mt-3 mr-3"
+                    variant="primary"
+                    @click="createTask"
+                >
+                    OK
+                </b-button>
+                <b-button
+                    class="mt-3"
+                    variant="light"
+                    @click="$bvModal.hide('create-task')"
+                >
+                    Cancel
+                </b-button>
+            </b-modal>
         </template>
     </folder-layout>
 </template>
@@ -206,7 +243,8 @@
         },
         data: function () {
             return {
-                targetObject: null
+                targetObject: null,
+                taskFile: null
             }
         },
         computed: {
@@ -281,6 +319,15 @@
             },
             duplicateTemplate: function () {
                 this.$refs.templates.find((ref) => ref.template.id === this.targetObject.id).showDuplicateModal()
+            },
+            createTask: function () {
+                this.$store.dispatch('templates/createTask', {
+                    template_id: this.targetObject.id,
+                    file: this.taskFile
+                })
+                    .then(() => {
+                        this.$router.push('#')
+                    })
             }
         }
     }

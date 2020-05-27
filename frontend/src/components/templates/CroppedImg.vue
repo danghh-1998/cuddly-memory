@@ -14,6 +14,7 @@
             </div>
             <div class="overlay">
                 <b-overlay
+                    v-if="$store.getters['auth/role'] === 'admin'"
                     :id="overlayId"
                     :show="overlayShow"
                     variant="light"
@@ -43,6 +44,7 @@
             <b-form-select
                 :id="boundingBoxId"
                 v-model="selected"
+                :disabled="$store.getters['auth/role'] === 'user'"
                 :options="options"
                 class="mt-2 form-select"
                 @change="updateType"
@@ -155,7 +157,7 @@
     }
 
     .form-select {
-        width: 80%;
+        width: calc(80% - 3.25rem);
         margin-left: 1rem;
     }
 

@@ -31,7 +31,7 @@ class TaskCreateApi(APIView):
 
         class Meta:
             model = Task
-            exclude = ['deleted']
+            exclude = ['images', 'deleted']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)

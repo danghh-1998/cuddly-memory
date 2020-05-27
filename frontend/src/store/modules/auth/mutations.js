@@ -57,7 +57,6 @@ export default {
     },
     signOut: state => {
         localStorage.clear()
-        state.user = {role: 'guest'}
     },
     updateProfile: () => {
         state.status = '';
