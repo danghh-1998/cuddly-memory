@@ -18,10 +18,46 @@
                     variant="primary"
                     class="d-inline-block mr-2 template-button"
                     :disabled="!canCreate"
-                    @click="updateTemplate"
+                    @click="$bvModal.show('create-task')"
                 >
                     Create task
                 </b-button>
+                <b-modal
+                    id="create-task"
+                    hide-footer
+                    centered
+                >
+                    <template
+                        #modal-title
+                    >
+                        Create task
+                    </template>
+                    <div>
+                        <span>Upload images</span>
+                        <b-form-file
+                            v-model="taskFile"
+                            :state="Boolean(taskFile)"
+                            class="mt-4"
+                            placeholder="Upload images"
+                            drop-placeholder="Drop file here"
+                            accept=".jpg .png .jpeg .zip"
+                        />
+                    </div>
+                    <b-button
+                        class="mt-3 mr-3"
+                        variant="primary"
+                        @click="createTask"
+                    >
+                        OK
+                    </b-button>
+                    <b-button
+                        class="mt-3"
+                        variant="light"
+                        @click="$bvModal.hide('create-task')"
+                    >
+                        Cancel
+                    </b-button>
+                </b-modal>
             </div>
         </div>
         <b-container
@@ -141,7 +177,8 @@
                 },
                 focusedId: null,
                 forceUpdate: 0,
-                emptyImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+                emptyImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+                taskFile: null
             };
         },
         computed: {
@@ -258,6 +295,15 @@
                 if (this.canEdit) {
                     this.updateBoundingBox()
                 }
+            },
+            createTask: function () {
+                this.$store.dispatch('tasks/createTask', {
+                    template_id: this.$store.getters['templates/id'],
+                    file: this.taskFile
+                })
+                    .then(() => {
+                        this.$router.push('/tasks')
+                    })
             }
         }
     }

@@ -30,7 +30,8 @@
                         <span class="nav-text">Template</span>
                     </b-nav-item>
                     <b-nav-item
-                        href="#"
+                        :active="routeName==='tasks'"
+                        :href="$route.path === '/tasks' ? '#': '/tasks'"
                     >
                         <span class="nav-text">Task</span>
                     </b-nav-item>

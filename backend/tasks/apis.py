@@ -6,6 +6,7 @@ from rest_framework.renderers import JSONRenderer
 
 from .services import *
 from .models import Task
+from templates.models import Template
 from images.models import Image
 from .permissions import *
 from utils.serializer_validator import validate_serializer
@@ -22,6 +23,13 @@ class TaskCreateApi(APIView):
         file = serializers.FileField(required=True)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                fields = ['id', 'display_name']
+
+        template = TemplateSerializer()
+
         class ImageSerializer(serializers.ModelSerializer):
             class Meta:
                 model = Image
@@ -31,7 +39,7 @@ class TaskCreateApi(APIView):
 
         class Meta:
             model = Task
-            exclude = ['images', 'deleted']
+            exclude = ['deleted']
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
@@ -78,6 +86,13 @@ class TaskListApi(APIView):
     permission_classes = (UserPermission,)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class TemplateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Template
+                fields = ['id', 'display_name']
+
+        template = TemplateSerializer()
+
         class Meta:
             model = Task
             exclude = ['deleted']
@@ -164,3 +179,21 @@ class TaskDownloadResult(APIView):
         self.check_object_permissions(request=request, obj=task)
         json_result = get_task_results(task=task)
         return Response(json_result, status=status.HTTP_200_OK)
+
+
+class TaskDeleteApi(APIView):
+    permission_classes = (OwnerPermission,)
+
+    class ResponseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Task
+            fields = '__all__'
+
+    def delete(self, request, task_id):
+        task = get_tasks_by(id=task_id).first()
+        self.check_object_permissions(request=request, obj=task)
+        task = delete_task(task)
+        response_serializer = self.ResponseSerializer(task)
+        return Response({
+            'task': response_serializer.data
+        }, status=status.HTTP_200_OK)

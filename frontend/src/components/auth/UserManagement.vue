@@ -15,7 +15,6 @@
             :items="subUsers"
             :fields="fields"
             :tbody-tr-class="adminClass"
-            outlined
             head-variant="light"
         >
             <template #cell(name)="data">

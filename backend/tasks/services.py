@@ -66,3 +66,8 @@ def get_task_results(task):
         tmp_file.write(results.encode('utf8'))
     with open(tmp_file_path, 'rb') as tmp_file:
         return tmp_file.read()
+
+
+def delete_task(task):
+    task.delete()
+    return task

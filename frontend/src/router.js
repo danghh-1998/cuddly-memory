@@ -9,6 +9,7 @@ import Profile from "@/views/auth/Profile";
 import Template from "@/views/templates/Template";
 import TemplateCreate from "@/views/templates/TemplateCreate";
 import Management from "@/views/auth/Management";
+import Task from "@/views/tasks/Task";
 
 let routes = [
     {
@@ -90,6 +91,15 @@ let routes = [
         meta: {
             title: 'Template',
             requireRoles: ['user', 'admin']
+        }
+    },
+    {
+        path: '/tasks',
+        name: 'tasks',
+        component: Task,
+        meta: {
+            title: 'Task',
+            requireRoles: ['user']
         }
     },
     {
