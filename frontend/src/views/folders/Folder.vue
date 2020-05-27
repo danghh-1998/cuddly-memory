@@ -184,6 +184,7 @@
                     Create task
                 </template>
                 <div>
+                    <span>Upload images</span>
                     <b-form-file
                         v-model="taskFile"
                         :state="Boolean(taskFile)"
@@ -321,12 +322,12 @@
                 this.$refs.templates.find((ref) => ref.template.id === this.targetObject.id).showDuplicateModal()
             },
             createTask: function () {
-                this.$store.dispatch('templates/createTask', {
+                this.$store.dispatch('tasks/createTask', {
                     template_id: this.targetObject.id,
                     file: this.taskFile
                 })
                     .then(() => {
-                        this.$router.push('#')
+                        this.$router.push('/tasks')
                     })
             }
         }
