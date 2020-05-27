@@ -5,12 +5,22 @@
             <div class="page-header-wrapper">
                 <span class="d-inline-block">Template {{ $store.getters['templates/name'] }}</span>
                 <b-button
+                    v-if="$store.getters['auth/role'] === 'admin'"
+                    variant="primary"
+                    class="d-inline-block mr-2 template-button"
+                    :disabled="canEdite"
+                    @click="updateTemplate"
+                >
+                    Save
+                </b-button>
+                <b-button
+                    v-if="!canEdit"
                     variant="primary"
                     class="d-inline-block mr-2 template-button"
                     :disabled="!canCreate"
                     @click="updateTemplate"
                 >
-                    Save
+                    Create task
                 </b-button>
             </div>
         </div>
@@ -42,6 +52,7 @@
                         :restore="false"
                         @ready="ready"
                         @cropend="cropend"
+                        @zoom="zoom"
                     />
                 </b-col>
                 <b-col
@@ -50,7 +61,7 @@
                     sm="12"
                     xs="12"
                     cols="12"
-                    class="col-scroll col"
+                    :class="{'col-scroll': true, 'col': true, 'col-scroll-view': !canEdit}"
                 >
                     <vuescroll
                         :key="forceUpdate"
@@ -80,6 +91,7 @@
                         />
                     </vuescroll>
                     <b-button-group
+                        v-if="canEdit"
                         class="template-group-button"
                     >
                         <b-button
@@ -153,6 +165,9 @@
                     return true
                 }
                 return this.boundingBoxes[0].image !== this.emptyImage;
+            },
+            canEdit: function () {
+                return this.$store.getters['auth/role'] === 'admin'
             }
         },
         methods: {
@@ -235,7 +250,14 @@
                 this.$refs.cropper.reset()
             },
             cropend: function () {
-                this.updateBoundingBox()
+                if (this.canEdit) {
+                    this.updateBoundingBox()
+                }
+            },
+            zoom: function () {
+                if (this.canEdit) {
+                    this.updateBoundingBox()
+                }
             }
         }
     }
@@ -274,6 +296,11 @@
     .col-scroll {
         padding-right: 0 !important;
         height: calc(100% - 3.25rem);
+    }
+
+    .col-scroll-view {
+        height: 100%;
+        margin-bottom: 0;
     }
 
     .template-group-button {

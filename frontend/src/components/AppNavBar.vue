@@ -78,8 +78,10 @@
         },
         methods: {
             signOut: function () {
-                this.$store.dispatch('auth/signOut');
-                this.$router.push({name: 'sign-in'})
+                this.$store.dispatch('auth/signOut')
+                    .then(() => {
+                        this.$router.push({name: 'sign-in'})
+                    })
             }
         }
     }

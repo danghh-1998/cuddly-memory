@@ -127,7 +127,7 @@
             },
             resetForm: function () {
                 this.form = {
-                    name: null,
+                    email: this.form.email,
                     password: null
                 }
             },
@@ -137,38 +137,44 @@
                     this.makeToast();
                 } else {
                     this.$store.dispatch('auth/signIn', snakecaseKeys(this.form))
-                    .then(() => {
-                        if (this.status === 'FAILED') {
-                            this.makeToast();
-                            this.resetForm();
-                            this.$store.dispatch('auth/resetStatus');
-                        } else {
-                            let user = this.$store.getters['auth/user'];
-                            if (!user.changeInitPassword){
-                                this.$router.push('/change-init-password')
+                        .then(() => {
+                            if (this.status === 'FAILED') {
+                                this.makeToast();
+                                this.resetForm();
+                                this.$store.dispatch('auth/resetStatus');
                             } else {
-                                this.$router.push('/folders/0');
+                                let user = this.$store.getters['auth/user'];
+                                if (!user.changeInitPassword) {
+                                    this.$router.push('/change-init-password')
+                                } else {
+                                    this.$router.push('/folders/0');
+                                }
                             }
-                        }
-                    })
+                        })
                 }
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style
+    lang="scss"
+    scoped
+>
     .signin-navigate {
         color: #888888;
         text-decoration: none;
     }
+
     .signin-navigate:hover {
         color: #5cb85c;
     }
+
     .signin-form-forgot {
         margin-top: 10px;
         font-size: 14px;
         color: #888888;
+
         &-link {
             color: #777777;
             text-decoration: none;
@@ -178,6 +184,7 @@
             color: #5cb85c;
         }
     }
+
     .hidden {
         display: none;
     }

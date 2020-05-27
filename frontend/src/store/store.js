@@ -14,5 +14,13 @@ export const store = new Vuex.Store({
         folders,
         templates
     },
-    plugins: [createPersistedState()],
+    plugins: [createPersistedState({
+        key: 'vuex',
+        reducer(val) {
+            if (localStorage.getItem('token') === null) {
+                return null
+            }
+            return val
+        }
+    })],
 });

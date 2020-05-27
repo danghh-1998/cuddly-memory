@@ -93,5 +93,15 @@ export default {
                         })
                 })
         })
+    },
+    createTask: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        let formData = new FormData()
+        formData.append('template_id', payload.template_id)
+        formData.append('file', payload.file)
+        return api.post(`tasks/create`, formData)
+            .then((res) => {
+                console.log(res)
+            })
     }
 }

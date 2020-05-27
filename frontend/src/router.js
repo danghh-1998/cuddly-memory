@@ -112,7 +112,14 @@ router.beforeEach((to, from, next) => {
     }
     const requireRoles = to.matched.some(route => route.meta.requireRoles.includes(role));
     if (!requireRoles) {
-        return next('/sign-in');
+        switch (role) {
+            case 'guest':
+                return next('/sign-in');
+            case 'user':
+                return next('/folders/0');
+            case 'admin':
+                return next('/folders/0');
+        }
     }
     document.title = to.meta.title
     return next();
