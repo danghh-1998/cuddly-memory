@@ -1,13 +1,13 @@
 import os
-import json
 from django.conf import settings
-import datetime
 
 from utils.static_file_handler import extract_zip, file_uploader
 from .models import Task
 from templates.services import get_templates_by
 from utils.custom_exceptions import *
 from images.services import create_image
+from results.services import get_result_by
+from images.services import get_image_by
 
 
 def create_task(user, **kwargs):
@@ -31,6 +31,12 @@ def create_task(user, **kwargs):
     return task
 
 
+def check_task_done(task):
+    if task.status != 2:
+        raise ValidationError('Task is not done')
+    return True
+
+
 def update_task(task, **kwargs):
     status = kwargs.get('status')
     task.status = status
@@ -48,26 +54,14 @@ def get_tasks_by(raise_exception=True, only_deleted=False, **kwargs):
     return tasks
 
 
-def get_task_results(task):
-    if task.status != 2:
-        raise ValidationError(message='Task is not done')
-    results = {}
-    for image in task.images.all():
-        image_result = {}
-        bounding_box_id = 0
-        for result in image.results.all():
-            image_result[str(bounding_box_id)] = result.confirm_result if result.confirm_result else result.result
-            bounding_box_id += 1
-        results[image.name] = image_result
-    now = datetime.datetime.now()
-    results = json.dumps(results)
-    tmp_file_path = os.path.join('/tmp', f"{now}.json")
-    with open(tmp_file_path, 'wb') as tmp_file:
-        tmp_file.write(results.encode('utf8'))
-    with open(tmp_file_path, 'rb') as tmp_file:
-        return tmp_file.read()
-
-
 def delete_task(task):
     task.delete()
     return task
+
+
+def confirm_task_result(**kwargs):
+    image = get_image_by(id=kwargs.get('image_id'))
+    result = get_result_by(image=image, id=kwargs.get('result_id'))
+    result.confirm_result = kwargs.get('confirm_result')
+    result.save(update_fields=['confirm_result'])
+    return result
