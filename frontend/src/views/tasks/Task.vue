@@ -43,7 +43,7 @@
                         variant="success"
                         size="sm"
                         class="mr-1 task-button"
-                        @click="viewResult(data.item.id)"
+                        @click="viewResult(data.item)"
                     >
                         View result
                     </b-button>
@@ -128,8 +128,18 @@
                     status: '0'
                 })
             },
-            viewResult: function () {
-                this.$router.push('#')
+            viewResult: function (payload) {
+                this.$store.dispatch('tasks/fetchTask', payload)
+                .then(() => {
+                    this.$store.dispatch('templates/fetchTemplate', payload.template.id)
+                        .then(() => {
+                            this.$store.dispatch('tasks/fetchImages', payload.id)
+                                .then(() => {
+                                    let firstImage = this.$store.getters['tasks/images'][0].id
+                                    this.$router.push({name: 'confirm-task', params: {imageId: firstImage}})
+                                })
+                        })
+                })
             }
         }
     }

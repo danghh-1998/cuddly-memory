@@ -1,3 +1,5 @@
 export default {
-    tasks: []
+    tasks: [],
+    images: [],
+    task: {}
 }

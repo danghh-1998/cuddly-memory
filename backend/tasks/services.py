@@ -62,6 +62,13 @@ def delete_task(task):
 def confirm_task_result(**kwargs):
     image = get_image_by(id=kwargs.get('image_id'))
     result = get_result_by(image=image, id=kwargs.get('result_id'))
+    result.result = kwargs.get('confirm_result')
     result.confirm_result = kwargs.get('confirm_result')
-    result.save(update_fields=['confirm_result'])
+    result.save(update_fields=['result', 'confirm_result'])
     return result
+
+
+def allow_dowload_image(user, task):
+    if user != task.user:
+        raise Unauthorized
+    return True

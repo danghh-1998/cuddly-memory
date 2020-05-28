@@ -155,7 +155,7 @@
 
 
     export default {
-        name: "TemplateCreate",
+        name: "Template",
         components: {
             CroppedImg,
             VueCropper,

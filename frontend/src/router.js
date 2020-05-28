@@ -10,6 +10,7 @@ import Template from "@/views/templates/Template";
 import TemplateCreate from "@/views/templates/TemplateCreate";
 import Management from "@/views/auth/Management";
 import Task from "@/views/tasks/Task";
+import ConfirmTask from "@/views/tasks/ConfirmTask";
 
 let routes = [
     {
@@ -99,6 +100,15 @@ let routes = [
         component: Task,
         meta: {
             title: 'Task',
+            requireRoles: ['user']
+        }
+    },
+    {
+        path: '/confirm-task/:imageId',
+        name: 'confirm-task',
+        component: ConfirmTask,
+        meta: {
+            title: 'Confirm task',
             requireRoles: ['user']
         }
     },

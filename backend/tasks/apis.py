@@ -12,6 +12,7 @@ from .permissions import *
 from utils.serializer_validator import validate_serializer
 from utils.custom_renderer import PNGRenderer
 from utils.static_file_handler import file_downloader
+from auth_tokens.services import get_auth_token_by
 
 
 class TaskCreateApi(APIView):
@@ -157,9 +158,16 @@ class TaskConfirmResultApi(APIView):
         confirm_result = serializers.CharField(required=True)
 
     class ResponseSerializer(serializers.ModelSerializer):
+        class ImageSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Image
+                fields = ['id']
+
+        image = ImageSerializer()
+
         class Meta:
             model = Result
-            fields = ['id', 'result', 'confirm_result']
+            fields = ['id', 'result', 'confirm_result', 'image']
 
     def put(self, request, task_id):
         task = get_tasks_by(id=task_id).first()
@@ -179,7 +187,8 @@ class TaskDownloadImageApi(APIView):
 
     def get(self, request, task_id, image_name):
         task = get_tasks_by(id=task_id).first()
-        self.check_object_permissions(request=request, obj=task)
+        auth_token = get_auth_token_by(key=request.query_params.get('token'))
+        allow_dowload_image(user=auth_token.user, task=task)
         image = file_downloader(file_name=image_name, _type='images')
         return Response(image, status=status.HTTP_200_OK)
 
