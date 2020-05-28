@@ -35,5 +35,22 @@ export default {
             .then((res) => {
                 context.commit('createTask', res)
             })
+    },
+    fetchImages: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.get(`tasks/${payload}/images`)
+            .then(res => {
+                context.commit('fetchImages', res)
+            })
+    },
+    confirmResult: (context, payload) => {
+        api.defaults.headers.common.Authorization = `Token ${localStorage.getItem('token')}`;
+        return api.put(`tasks/${payload.id}/confirm_result`, payload.payload)
+            .then(res => {
+                context.commit('confirmResult', res)
+            })
+    },
+    fetchTask: (context, payload) => {
+        context.commit('fetchTask', payload)
     }
 }

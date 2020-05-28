@@ -48,7 +48,9 @@ def validate_bounding_boxes(data):
 def allow_dowload_image(user, template):
     owner = template.folder.user
     access_users = [*list(owner.sub_users.all()), owner]
-    return user in access_users
+    if user not in access_users:
+        raise Unauthorized
+    return True
 
 
 def create_template(user, **kwargs):
