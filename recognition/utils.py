@@ -9,9 +9,10 @@ import pytesseract
 import numpy as np
 import imutils
 import os
+import re
 
 DJANGO_ENV = os.environ.get('DJANGO_ENV')
-
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def get_task(connection):
     task = None
@@ -155,6 +156,13 @@ def get_image(task_id, connection):
     return images
 
 
+def check_email(email):
+    if re.search(regex, email):
+        return True
+    else:
+        return False
+
+
 def recognize_digits(image):
     text = pytesseract.image_to_string(image, config='digits')
     return text
@@ -173,6 +181,15 @@ def recognize_vie(image):
 def recognize_checkbox(image):
     text = checkbox_detect(image)
     return text
+
+
+def recognize_email(image):
+    text = pytesseract.image_to_string(image, lang='eng')
+    valid = check_email(text)
+    if valid:
+        return text
+    else:
+        return None
 
 
 def file_downloader(file_name, file_type, image_type):
