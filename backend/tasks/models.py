@@ -5,6 +5,10 @@ from .managers import TasksManager
 from users.models import User
 from templates.models import Template
 
+'''
+Create task class
+'''
+
 
 class Task(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
