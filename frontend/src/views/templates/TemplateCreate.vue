@@ -72,10 +72,10 @@
                             :key="boundingBox.id"
                             :bounding-box="boundingBox"
                             :focused="boundingBox.id === focusedId"
-                            @showBoundingBox="showBoundingBox"
-                            @updateType="updateType"
-                            @updateContext="updateContext"
-                            @deleteBoundingBox="deleteBoundingBox"
+                            @show-bounding-box="showBoundingBox"
+                            @update-type="updateType"
+                            @update-context="updateContext"
+                            @delete-bounding-box="deleteBoundingBox"
                         />
                     </vuescroll>
                     <b-button-group
