@@ -8,8 +8,6 @@ class Template(SafeDeleteModel):
 
     name = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
-    read_folder = models.CharField(max_length=255, default='')
-    write_folder = models.CharField(max_length=255, default='')
     folder = models.ForeignKey(Folder, related_name='templates', on_delete=models.CASCADE, unique=False, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -23,6 +23,7 @@ class BoundingBox(SafeDeleteModel):
 
     metadata = models.CharField(max_length=255)
     recognize_type = models.SmallIntegerField(choices=RECOGNIZE_TYPE_CHOICES, default=0)
+    context = models.CharField(max_length=255)
     template = models.ForeignKey(Template, related_name='bounding_boxes', unique=False, null=True,
                                  on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
