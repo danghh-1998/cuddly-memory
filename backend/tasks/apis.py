@@ -14,6 +14,11 @@ from utils.custom_renderer import PNGRenderer
 from utils.static_file_handler import file_downloader
 from auth_tokens.services import get_auth_token_by
 
+'''
+Create Task API
+Created on 9/5/2020
+'''
+
 
 class TaskCreateApi(APIView):
     permission_classes = (UserPermission,)
@@ -52,6 +57,12 @@ class TaskCreateApi(APIView):
         }, status=status.HTTP_200_OK)
 
 
+'''
+Update Task API
+Created on 9/5/2020
+'''
+
+
 class TaskUpdateApi(APIView):
     permission_classes = (OwnerPermission,)
 
@@ -82,6 +93,12 @@ class TaskUpdateApi(APIView):
         }, status=status.HTTP_200_OK)
 
 
+'''
+List Task API
+Created on 9/5/2020
+'''
+
+
 class TaskListApi(APIView):
     permission_classes = (UserPermission,)
 
@@ -104,6 +121,12 @@ class TaskListApi(APIView):
         return Response({
             'tasks': response_serializer.data
         }, status=status.HTTP_200_OK)
+
+
+'''
+Detail Task API
+Created on 9/5/2020
+'''
 
 
 class TaskDetailApi(APIView):
