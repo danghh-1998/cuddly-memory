@@ -146,6 +146,12 @@ class TaskDetailApi(APIView):
         }, status=status.HTTP_200_OK)
 
 
+'''
+List Task Image
+Created on 10/5/2020
+'''
+
+
 class TaskListImagesApi(APIView):
     permission_classes = (OwnerPermission,)
 
@@ -170,6 +176,12 @@ class TaskListImagesApi(APIView):
         return Response({
             'images': response_serializer.data
         }, status=status.HTTP_200_OK)
+
+
+'''
+Confirm Task Result API
+Created on 10/5/2020
+'''
 
 
 class TaskConfirmResultApi(APIView):
@@ -204,6 +216,12 @@ class TaskConfirmResultApi(APIView):
         }, status=status.HTTP_200_OK)
 
 
+'''
+Download Task Image
+Created on 10/5/2020
+'''
+
+
 class TaskDownloadImageApi(APIView):
     permission_classes = (OwnerPermission,)
     renderer_classes = (PNGRenderer,)
@@ -214,6 +232,12 @@ class TaskDownloadImageApi(APIView):
         allow_dowload_image(user=auth_token.user, task=task)
         image = file_downloader(file_name=image_name, _type='images')
         return Response(image, status=status.HTTP_200_OK)
+
+
+'''
+Delete Task API
+Created on 10/5/2020
+'''
 
 
 class TaskDeleteApi(APIView):
