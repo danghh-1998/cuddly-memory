@@ -89,7 +89,7 @@
                                 />
                             </b-form-group>
                             <b-form-group
-                                label="Date of birth"
+                                label="Confirm password"
                                 label-for="form-passowrd-conformation"
                             >
                                 <b-form-input
@@ -248,7 +248,7 @@
 
 <style scoped>
     .page-wrapper {
-        margin-top: 100px;
+        padding-top: 100px;
         width: 100vw;
         height: 100vh;
     }
