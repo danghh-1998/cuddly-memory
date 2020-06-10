@@ -68,7 +68,7 @@ def download_s3(path):
     s3 = boto3.client(service_name='s3', aws_access_key_id=settings.AWS_ACCESS_KEY,
                       aws_secret_access_key=settings.AWS_ACCESS_TOKEN)
     bucket_name = settings.AWS_BUCKET_NAME
-    tmp_file = os.path.join('/tmp', f"{str(datetime.datetime.now())}.png")
+    tmp_file = os.path.join('/tmp', f"{str(datetime.now())}.png")
     s3.download_file(bucket_name, path, tmp_file)
     with open(tmp_file, 'rb+') as file:
         return file.read()

@@ -7,7 +7,8 @@ TOKEN_EXPIRED_AFTER_SECONDS = int(os.environ.get('TOKEN_EXPIRED_AFTER_SECONDS'))
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 
-ALLOWED_HOSTS = [os.environ.get('HOST_IP')]
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 DATABASES = {
     'default': {
