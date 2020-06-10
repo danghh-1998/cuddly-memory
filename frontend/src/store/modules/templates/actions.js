@@ -69,6 +69,7 @@ export default {
                                         scaleY: 1
                                     }),
                                     type: boundingBox.recognizeType,
+                                    context: boundingBox.context,
                                     id: boundingBoxes.length,
                                     image: ''
                                 })

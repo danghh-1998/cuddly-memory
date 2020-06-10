@@ -74,6 +74,7 @@
                             :focused="boundingBox.id === focusedId"
                             @showBoundingBox="showBoundingBox"
                             @updateType="updateType"
+                            @updateContext="updateContext"
                             @deleteBoundingBox="deleteBoundingBox"
                         />
                     </vuescroll>
@@ -189,6 +190,12 @@
                 })
                 this.boundingBoxes[index].type = type
             },
+            updateContext: function (imgId, context) {
+                let index = this.boundingBoxes.findIndex(boundingBox => {
+                    return boundingBox.id === imgId
+                })
+                this.boundingBoxes[index].context = context
+            },
             deleteBoundingBox: function (boundingBox) {
                 this.boundingBoxes.splice(this.boundingBoxes.length - boundingBox.id - 1, 1)
                 this.$refs.cropper.reset()
@@ -211,7 +218,8 @@
                     convertedBoundingBoxes.push(
                         {
                             metadata: convertedData,
-                            recognize_type: boundingBox.type
+                            recognize_type: boundingBox.type,
+                            context: boundingBox.context
                         }
                     )
                 })

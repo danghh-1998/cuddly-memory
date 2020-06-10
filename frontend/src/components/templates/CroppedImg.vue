@@ -35,20 +35,42 @@
             </div>
         </div>
         <b-form inline>
-            <label
-                class="mr-1 ml-3 cropped-title"
-                :for="boundingBoxId"
-            >
-                Recognize type
-            </label>
-            <b-form-select
-                :id="boundingBoxId"
-                v-model="selected"
-                :disabled="$store.getters['auth/role'] === 'user'"
-                :options="options"
-                class="mt-2 form-select"
-                @change="updateType"
-            />
+            <b-container class="mt-2">
+                <b-row>
+                    <b-col>
+                        <label
+                            :for="`${boundingBoxId}-context`"
+                            class="d-inline-block"
+                        >
+                            Context
+                        </label>
+                        <b-form-input
+                            :id="`${boundingBoxId}-context`"
+                            v-model="context"
+                            class="d-inline-block context-input"
+                            placeholder="Context"
+                            :disabled="$store.getters['auth/role'] === 'user'"
+                            @keyup="updateContext"
+                        />
+                    </b-col>
+                    <b-col>
+                        <label
+                            class="d-inline-block"
+                            :for="`${boundingBoxId}-recognize-type`"
+                        >
+                            Recognize type
+                        </label>
+                        <b-form-select
+                            :id="`${boundingBoxId}-recognize-type`"
+                            v-model="selected"
+                            :disabled="$store.getters['auth/role'] === 'user'"
+                            :options="options"
+                            class="d-inline-block type-select"
+                            @change="updateType"
+                        />
+                    </b-col>
+                </b-row>
+            </b-container>
         </b-form>
     </div>
 </template>
@@ -69,6 +91,7 @@
         data: function () {
             return {
                 selected: this.$props.boundingBox.type,
+                context: this.$props.boundingBox.context,
                 options: [
                     {
                         value: 0,
@@ -112,6 +135,9 @@
             },
             updateType: function () {
                 this.$emit('updateType', this.boundingBox.id, this.selected)
+            },
+            updateContext: function () {
+                this.$emit('updateContext', this.boundingBox.id, this.context)
             },
             deleteBoundingBox: function () {
                 this.$emit('deleteBoundingBox', this.$props.boundingBox)
@@ -167,8 +193,13 @@
         right: 40px;
     }
 
-    .cropped-title {
-        position: relative;
-        top: 5px;
+    .context-input {
+        margin-left: 0.25rem;
+        width: calc(100% - 4.5rem);
+    }
+
+    .type-select {
+        margin-left: 0.25rem;
+        width: calc(100% - 8.125rem);
     }
 </style>

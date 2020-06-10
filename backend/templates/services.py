@@ -28,7 +28,8 @@ def validate_bounding_boxes(data):
                                 "y": {"type": "number"},
                             }
                         },
-                        "recognize_type": {"type": "integer"}
+                        "recognize_type": {"type": "integer"},
+                        "context": {"type": "string"}
                     }
                 }
             }
@@ -71,7 +72,8 @@ def create_template(user, **kwargs):
     template = Template.objects.create(name=encypted_name, display_name=display_name, folder=folder)
     for bounding_box in bounding_boxes:
         create_bounding_box(metadata=json.dumps(bounding_box.get('metadata')),
-                            recognize_type=bounding_box.get('recognize_type'), template=template)
+                            recognize_type=bounding_box.get('recognize_type'), context=bounding_box.get('context'),
+                            template=template)
     return template
 
 
@@ -105,7 +107,8 @@ def update_template(template, **kwargs):
             bounding_box.delete()
         for bounding_box in new_bounding_boxes:
             create_bounding_box(metadata=json.dumps(bounding_box.get('metadata')),
-                                recognize_type=bounding_box.get('recognize_type'), template=template)
+                                recognize_type=bounding_box.get('recognize_type'), context=bounding_box.get('context'),
+                                template=template)
     if image:
         encypted_name = file_uploader(image=image, _type='templates')
         template.name = encypted_name
