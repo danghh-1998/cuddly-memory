@@ -76,7 +76,7 @@
         },
         methods: {
             showBoundingBox: function () {
-                this.$emit('showBoundingBox', this.$props.boundingBox)
+                this.$emit('show-bounding-box', this.$props.boundingBox)
             },
             confirmResult: function () {
                 this.$store.dispatch('tasks/confirmResult', {

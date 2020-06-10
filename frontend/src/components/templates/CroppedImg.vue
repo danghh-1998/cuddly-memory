@@ -131,16 +131,16 @@
         },
         methods: {
             showBoundingBox: function () {
-                this.$emit('showBoundingBox', this.$props.boundingBox)
+                this.$emit('show-bounding-box', this.$props.boundingBox)
             },
             updateType: function () {
-                this.$emit('updateType', this.boundingBox.id, this.selected)
+                this.$emit('update-type', this.boundingBox.id, this.selected)
             },
             updateContext: function () {
-                this.$emit('updateContext', this.boundingBox.id, this.context)
+                this.$emit('update-context', this.boundingBox.id, this.context)
             },
             deleteBoundingBox: function () {
-                this.$emit('deleteBoundingBox', this.$props.boundingBox)
+                this.$emit('delete-bounding-box', this.$props.boundingBox)
             }
         }
     }

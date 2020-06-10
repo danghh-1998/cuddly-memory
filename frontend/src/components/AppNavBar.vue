@@ -30,10 +30,18 @@
                         <span class="nav-text">Template</span>
                     </b-nav-item>
                     <b-nav-item
+                        v-if="$store.getters['auth/role'] === 'user'"
                         :active="routeName==='tasks'"
                         :href="$route.path === '/tasks' ? '#': '/tasks'"
                     >
                         <span class="nav-text">Task</span>
+                    </b-nav-item>
+                    <b-nav-item
+                        v-if="$store.getters['auth/role'] === 'admin'"
+                        :active="routeName==='user-management'"
+                        :href="$route.path === '/user-management' ? '#': '/user-management'"
+                    >
+                        <span class="nav-text">User</span>
                     </b-nav-item>
                 </b-navbar-nav>
                 <b-navbar-nav>
@@ -41,16 +49,13 @@
                         <template
                             #button-content
                         >
-                            <span class="nav-text">User</span>
+                            <font-awesome-icon
+                                :icon="['fas', 'cog']"
+                                class="folder-icon-svg"
+                            />
                         </template>
                         <b-dropdown-item href="/profile">
                             Profile
-                        </b-dropdown-item>
-                        <b-dropdown-item
-                            v-if="accessManagement"
-                            href="/user-management"
-                        >
-                            User management
                         </b-dropdown-item>
                         <b-dropdown-item
                             href="#"
@@ -66,16 +71,17 @@
 </template>
 
 <script>
+    import {faCog} from '@fortawesome/free-solid-svg-icons'
+    import {library} from '@fortawesome/fontawesome-svg-core'
+
+    library.add(faCog)
+
     export default {
         name: "AppNavBar",
         computed: {
             routeName: function () {
                 return this.$route.name;
             },
-            accessManagement: function () {
-                let role = this.$store.getters['auth/user'].role;
-                return (role === 'admin') || (role === 'superadmin')
-            }
         },
         methods: {
             signOut: function () {
