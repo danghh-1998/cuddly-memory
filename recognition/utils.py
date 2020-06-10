@@ -1,5 +1,4 @@
 import base64
-import os
 import cv2
 from mysql.connector import MySQLConnection
 import ast
@@ -102,7 +101,7 @@ def get_coordinates(task, connection):
                     metadatas.append((bounding_box['metadata'], bounding_box['id'], bounding_box['recognize_type']))
             else:
                 update_task(task['id'], 3, connection)
-                logger.error(f"Task {task['id']} failed due to not having bounding_boxes ")
+                logger.error(f"Task {task['id']} failed due to not having bounding boxes ")
             for metadata in metadatas:
                 res = ast.literal_eval(metadata[0])
                 coordinates = []
@@ -113,7 +112,7 @@ def get_coordinates(task, connection):
                 coordinates_list.append((coordinates, metadata[1], metadata[2]))
         else:
             update_task(task['id'], 3)
-            logger.error(f"Task {task['id']} failed due to not having bounding_boxes ")
+            logger.error(f"Task {task['id']} failed due to not having bounding boxes ")
     else:
         update_task(task['id'], 3)
         logger.error(f"Task {task['id']} failed due to not found required template")
