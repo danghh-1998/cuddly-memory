@@ -6,7 +6,7 @@ from users.models import User
 from templates.models import Template
 
 '''
-Create task class
+Entity Task
 '''
 
 

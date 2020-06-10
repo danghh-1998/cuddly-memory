@@ -1,6 +1,10 @@
 from .models import Result
 from utils.custom_exceptions import *
 
+'''
+Operation of Entity Result
+'''
+
 
 def get_result_by(raise_exception=True, with_deleted=False, **kwargs):
     if with_deleted:

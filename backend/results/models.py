@@ -5,6 +5,10 @@ from images.models import Image
 from bounding_boxes.models import BoundingBox
 from .managers import ResultsManager
 
+'''
+Entity Result
+'''
+
 
 class Result(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE
