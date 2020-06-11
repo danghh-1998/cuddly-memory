@@ -12,13 +12,15 @@ class BoundingBox(SafeDeleteModel):
     VIE_MULTIPLE_LINE = 3
     DIGIT = 4
     CHECKBOX = 5
+    EMAIL = 6
     RECOGNIZE_TYPE_CHOICES = (
         (ENG, 'ENG'),
         (VIE, 'VIE'),
         (ENG_MULTIPLE_LINE, 'ENG_MULTIPLE_LINE'),
         (VIE_MULTIPLE_LINE, 'VIE_MULTIPLE_LINE'),
         (DIGIT, 'DIGIT'),
-        (CHECKBOX, 'CHECKBOX')
+        (CHECKBOX, 'CHECKBOX'),
+        (EMAIL, 'EMAIL')
     )
 
     metadata = models.CharField(max_length=255)
