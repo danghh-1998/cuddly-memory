@@ -68,6 +68,8 @@ def recognition():
                             text = recognize_vie(img)
                         elif coordinates[2] == 4:
                             text = recognize_digits(img)
+                        elif coordinates[2] == 6:
+                            text = recognize_email(img)
                         bounding_box_id = coordinates[1]
                         save_result(text, image[1], bounding_box_id, task_id, connection)
                         print(text)
