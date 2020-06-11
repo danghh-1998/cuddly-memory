@@ -2,7 +2,7 @@ import axios from 'axios'
 import camelcaseKeys from "camelcase-keys";
 
 export const api = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: process.env.VUE_APP_BASE_URL,
     transformResponse: [data => {
         if (data) {
             return (camelcaseKeys(JSON.parse(data), {deep: true}))
@@ -11,6 +11,6 @@ export const api = axios.create({
 });
 
 export const imageApi = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: process.env.VUE_APP_BASE_URL,
     responseType: "blob"
 });

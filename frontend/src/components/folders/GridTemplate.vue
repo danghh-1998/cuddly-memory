@@ -138,9 +138,9 @@
             },
             thumbnailBackgroundImage: function () {
                 return {
-                    'background-image': `url(http://127.0.0.1:8000/api/templates/${this.$props.template.id}/image/0?token=${this.token})`,
+                    'background-image': `url(${process.env.VUE_APP_BASE_URL}/templates/${this.$props.template.id}/image/0?token=${this.token})`,
                     'width': '100%',
-                    'height': '190px',
+                    'height': '190px',      
                     'background-position': 'center center',
                     'background-repeat': 'no-repeat',
                     'background-size': 'cover'
