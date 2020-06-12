@@ -1,3 +1,13 @@
+"""
+Create Template API
+Update Template API
+Detail Template API
+Delete Template API
+Duplicate template API
+Template Download Image API
+Created on 20/4/2020
+"""
+
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response

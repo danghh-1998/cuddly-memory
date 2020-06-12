@@ -9,6 +9,7 @@ Download Task API
 Delete Task API
 Created on 20/4/2020
 """
+
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
