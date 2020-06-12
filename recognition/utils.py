@@ -14,6 +14,7 @@ import re
 DJANGO_ENV = os.environ.get('DJANGO_ENV')
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
+
 def get_task(connection):
     task = None
     try:
@@ -30,6 +31,25 @@ def get_task(connection):
         logger.error("MySQL Connection error")
         pass
     return task
+
+
+def get_bounding_boxex(template, connection):
+    bounding_boxes = []
+
+    if template:
+        try:
+            cussor = connection.cursor()
+            template_id = template['id']
+            query = f"Select * from bounding_box where template_id = {template_id}"
+            cussor.execute(query)
+            columns = tuple([d[0] for d in cussor.description])
+            for row in cussor:
+                bounding_boxes.append(dict(zip(columns, row)))
+            cussor.close()
+        except MySQLConnection:
+            logger.error("MySQL Connection error")
+            pass
+    return bounding_boxes
 
 
 def get_template(task, connection):
@@ -57,25 +77,6 @@ def get_template(task, connection):
             logger.error("MySQL Connection error")
             pass
     return template
-
-
-def get_bounding_boxex(template, connection):
-    bounding_boxes = []
-
-    if template:
-        try:
-            cussor = connection.cursor()
-            template_id = template['id']
-            query = f"Select * from bounding_box where template_id = {template_id}"
-            cussor.execute(query)
-            columns = tuple([d[0] for d in cussor.description])
-            for row in cussor:
-                bounding_boxes.append(dict(zip(columns, row)))
-            cussor.close()
-        except MySQLConnection:
-            logger.error("MySQL Connection error")
-            pass
-    return bounding_boxes
 
 
 def update_task(task_id, _type, connection):
