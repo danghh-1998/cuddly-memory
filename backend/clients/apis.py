@@ -1,3 +1,13 @@
+'''
+Sign up API
+Client detail API
+Client update API
+Client deactivate API
+Client activate API
+Client list users API
+Created on 18/4/2020
+'''
+
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework.views import APIView
