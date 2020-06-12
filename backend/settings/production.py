@@ -6,6 +6,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 TOKEN_EXPIRED_AFTER_SECONDS = int(os.environ.get('TOKEN_EXPIRED_AFTER_SECONDS'))
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+PARTNER_CODE = os.environ.get('PARTNER_CODE')
+MOMO_ACCESS_KEY = os.environ.get('MOMO_ACCESS_KEY')
+MOMO_SECRET_KEY = os.environ.get('MOMO_SECRET_KEY')
+DJANGO_HOST = os.environ.get('DJANGO_HOST')
+VUE_HOST = os.environ.get('VUE_HOST')
 
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True

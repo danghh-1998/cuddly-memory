@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'bounding_boxes',
     'tasks',
     'images',
-    'results'
+    'results',
+    'bills'
 ]
 
 MIDDLEWARE = [
