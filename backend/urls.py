@@ -7,7 +7,8 @@ urlpatterns = [
     url('api/', include('clients.urls')),
     url('api/', include('folders.urls')),
     url('api/', include('templates.urls')),
-    url('api/', include('tasks.urls'))
+    url('api/', include('tasks.urls')),
+    url('api/', include('bills.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
