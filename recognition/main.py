@@ -21,7 +21,7 @@ def recognition():
         task = get_task(connection)
         if task:
             task_id = task['id']
-            # update_task(task_id, 1)
+            update_task(task_id, 1)
             coordinates_list = get_coordinates(task, connection)
             images_list = get_image(task_id, connection)
             images = []
