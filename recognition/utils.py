@@ -79,18 +79,6 @@ def get_template(task, connection):
     return template
 
 
-def update_task(task_id, _type, connection):
-    try:
-        cussor = connection.cursor()
-        query = f"Update task set status = {_type} where id = {task_id}"
-        cussor.execute(query)
-        connection.commit()
-        cussor.close()
-    except MySQLConnection:
-        logger.error("MySQL Connection error")
-        pass
-
-
 def get_coordinates(task, connection):
     metadatas = []
     coordinates_list = []
@@ -119,6 +107,18 @@ def get_coordinates(task, connection):
         update_task(task['id'], 3)
         logger.error(f"Task {task['id']} failed due to not found required template")
     return coordinates_list
+
+
+def update_task(task_id, _type, connection):
+    try:
+        cussor = connection.cursor()
+        query = f"Update task set status = {_type} where id = {task_id}"
+        cussor.execute(query)
+        connection.commit()
+        cussor.close()
+    except MySQLConnection:
+        logger.error("MySQL Connection error")
+        pass
 
 
 def save_result(text, image_id, bounding_box, task_id, connection):
