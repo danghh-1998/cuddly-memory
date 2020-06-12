@@ -1,6 +1,5 @@
 import mysql.connector
-
-from mysql.connector import Error, MySQLConnection
+from mysql.connector import Error
 import os
 from logger import logger
 
@@ -16,7 +15,7 @@ def get_connection():
                                              database=DATABASE,
                                              user=USER,
                                              password=PASSWORD)
-    except MySQLConnection:
-        logger.error("MySQL Connection error")
+    except Error as e:
+        logger.error(e)
 
     return connection
