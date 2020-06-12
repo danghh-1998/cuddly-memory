@@ -1,14 +1,3 @@
-'''
-Create Task API
-Update Task API
-List Task API
-Detail Task API
-List Task Image API
-Task Confirm Result API
-Task Download Image API
-Delete Task API
-'''
-
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
