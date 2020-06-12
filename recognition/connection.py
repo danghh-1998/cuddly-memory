@@ -8,7 +8,6 @@ def get_connection():
     HOST = os.environ.get('DB_HOST')
     DATABASE = os.environ.get('DB_NAME')
     USER = os.environ.get('DB_USER')
-    print(os.environ.get('DB_HOST'))
     PASSWORD = os.environ.get('DB_PASSWORD')
     connection = None
     try:
