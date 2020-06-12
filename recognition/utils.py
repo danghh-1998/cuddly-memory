@@ -229,25 +229,21 @@ def checkbox_detect(image):
     and detects checkbox in it
 
 
-    1. Read the image
-    2. Convert it into Grayscale
-    3. Blur the Image
-    4. Detect Edges using Canny edge detector
-    5. Detect all the contours
-    6. Identify the shape using area, threshold, aspect ratio,
+    1. Convert it into Grayscale
+    2. Blur the Image
+    3. Detect Edges using Canny edge detector
+    4. Detect all the contours
+    5. Identify the shape using area, threshold, aspect ratio,
     contours closed/open
-    7. Draw boundaries on shapes found
+    6. Draw boundaries on shapes found
     '''
     try:
-        # 1. Read the image: If the parameter method is path
-        # else use the image directly
-
-        # 2. Convert it into Grayscale
+        # 1. Convert it into Grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        # 3. Blur the Image
+        # 2. Blur the Image
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
-        # 4. Detect Edges using Canny edge detector the lower and upper threshold
+        # 3. Detect Edges using Canny edge detector the lower and upper threshold
         # boundaries are calculated using median and sigma
         sigma = 0.33
         v = np.median(blurred)
@@ -255,7 +251,7 @@ def checkbox_detect(image):
         upper = int(min(255, (1.0 + sigma) * v))
         edged = cv2.Canny(blurred, lower, upper)
 
-        # 5. Detect all the contours and grab the values using imutilsgrab_contours
+        # 4. Detect all the contours and grab the values using imutilsgrab_contours
         cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
 
@@ -265,15 +261,15 @@ def checkbox_detect(image):
         # Loop over each and every contours for filtering the shape
 
         for c in cnts:
-            # 6. Identify the shape using area, threshold, aspect ratio, contours closed/open
+            # 5. Identify the shape using area, threshold, aspect ratio, contours closed/open
             peri = cv2.arcLength(c, True)
             approx = cv2.approxPolyDP(c, 0.035 * peri, True)
             (x, y, w, h) = cv2.boundingRect(approx)
             aspect_ratio = w / float(h)
             area = cv2.contourArea(c)
             areas_pt.append((len(approx), area, aspect_ratio))
-            if area > 10.0 and area < 250.0 and (aspect_ratio >= 0.82 and aspect_ratio <= 1.2):
-                # 7. Draw boundaries on shapes found
+            if 10.0 < area < 250.0 and (0.82 <= aspect_ratio <= 1.2):
+                # 6. Draw boundaries on shapes found
                 checkbox_contours.append(c)
 
         if checkbox_contours:
