@@ -1,5 +1,6 @@
 import mysql.connector
-from mysql.connector import Error
+
+from mysql.connector import Error, MySQLConnection
 import os
 from logger import logger
 
@@ -8,7 +9,6 @@ def get_connection():
     HOST = os.environ.get('DB_HOST')
     DATABASE = os.environ.get('DB_NAME')
     USER = os.environ.get('DB_USER')
-    print(os.environ.get('DB_HOST'))
     PASSWORD = os.environ.get('DB_PASSWORD')
     connection = None
     try:
@@ -16,7 +16,7 @@ def get_connection():
                                              database=DATABASE,
                                              user=USER,
                                              password=PASSWORD)
-    except Error as e:
-        logger.error(e)
+    except MySQLConnection:
+        logger.error("MySQL Connection error")
 
     return connection
