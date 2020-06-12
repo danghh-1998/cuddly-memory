@@ -121,23 +121,6 @@ def update_task(task_id, _type, connection):
         pass
 
 
-def save_result(text, image_id, bounding_box, task_id, connection):
-    now = datetime.now()
-
-    try:
-        cussor = connection.cursor()
-        query = f"INSERT INTO result(result, created_at, updated_at, image_id, bounding_box_id) VALUES ('{text}','{now}', '{now}', {image_id},{bounding_box})"
-        cussor.execute(query)
-        connection.commit()
-        cussor.close()
-        update_task(task_id, 2, connection)
-    except MySQLConnection:
-        logger.error("MySQL Connection error")
-        update_task(task_id, 3, connection)
-        logger.error(f"Task {task_id} failed due to cannot save results")
-        pass
-
-
 def get_image(task_id, connection):
     images = []
     try:
@@ -155,6 +138,23 @@ def get_image(task_id, connection):
         update_task(task_id, 3)
         logger.error(f"Task {task_id} failed due to not having images")
     return images
+
+
+def save_result(text, image_id, bounding_box, task_id, connection):
+    now = datetime.now()
+
+    try:
+        cussor = connection.cursor()
+        query = f"INSERT INTO result(result, created_at, updated_at, image_id, bounding_box_id) VALUES ('{text}','{now}', '{now}', {image_id},{bounding_box})"
+        cussor.execute(query)
+        connection.commit()
+        cussor.close()
+        update_task(task_id, 2, connection)
+    except MySQLConnection:
+        logger.error("MySQL Connection error")
+        update_task(task_id, 3, connection)
+        logger.error(f"Task {task_id} failed due to cannot save results")
+        pass
 
 
 def check_email(email):
