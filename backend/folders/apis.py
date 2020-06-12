@@ -1,3 +1,12 @@
+'''
+Folder detail API
+Folder create API
+Folder update API
+Folder duplicate API
+Folder delete API
+Created on 30/4/2020
+'''
+
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
