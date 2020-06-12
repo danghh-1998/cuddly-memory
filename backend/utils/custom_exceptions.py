@@ -50,3 +50,21 @@ class DuplicateEntry(APIException):
     def __init__(self, entry, key):
         self.default_detail = f"Duplicate entry {entry} for key {key}"
         super().__init__()
+
+
+class PaidBill(APIException):
+    status_code = 200
+    default_detail = 'Paid bill'
+    default_code = '607'
+
+
+class PaymentFailed(APIException):
+    status_code = 200
+    default_detail = 'Payment failed'
+    default_code = '607'
+
+
+class SignatureError(APIException):
+    status_code = 200
+    default_detail = 'Signature missmatch'
+    default_code = '608'
