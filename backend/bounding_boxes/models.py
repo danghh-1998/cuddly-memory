@@ -8,16 +8,12 @@ class BoundingBox(SafeDeleteModel):
 
     ENG = 0
     VIE = 1
-    ENG_MULTIPLE_LINE = 2
-    VIE_MULTIPLE_LINE = 3
-    DIGIT = 4
-    CHECKBOX = 5
-    EMAIL = 6
+    DIGIT = 2
+    CHECKBOX = 3
+    EMAIL = 4
     RECOGNIZE_TYPE_CHOICES = (
         (ENG, 'ENG'),
         (VIE, 'VIE'),
-        (ENG_MULTIPLE_LINE, 'ENG_MULTIPLE_LINE'),
-        (VIE_MULTIPLE_LINE, 'VIE_MULTIPLE_LINE'),
         (DIGIT, 'DIGIT'),
         (CHECKBOX, 'CHECKBOX'),
         (EMAIL, 'EMAIL')

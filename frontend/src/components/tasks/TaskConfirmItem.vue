@@ -22,7 +22,6 @@
                     >
                         <b-form-input
                             :value="boundingBox.result.result"
-                            disabled
                         />
                     </div>
                 </div>

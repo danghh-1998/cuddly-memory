@@ -13,16 +13,16 @@ from images.services import get_image_by
 def create_task(user, **kwargs):
     raw_file = kwargs.get('file')
     _, ext = os.path.splitext(raw_file.name)
+    template = get_templates_by(id=kwargs.get('template_id')).first()
     if ext == '.zip':
         file = raw_file.file
-        encrypted_names, image_names = extract_zip(file)
+        encrypted_names, image_names = extract_zip(file, template)
     elif ext not in settings.IMAGE_TYPES:
         raise ValidationError('Bad image type')
     else:
-        encrypted_name, image_name = file_uploader(image=raw_file, _type='images')
+        encrypted_name, image_name = file_uploader(image=raw_file, _type='images', template=template)
         encrypted_names = [encrypted_name]
         image_names = [image_name]
-    template = get_templates_by(id=kwargs.get('template_id')).first()
     if template and template.folder.user != user.admin:
         raise Unauthorized
     task = Task.objects.create(user=user, template=template)
