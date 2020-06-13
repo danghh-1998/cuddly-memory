@@ -1,12 +1,3 @@
-'''
-Create Template API
-Detail Template API
-Template Download Image API
-Update Template API
-Duplicate Template API
-Delete Template API
-'''
-
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
