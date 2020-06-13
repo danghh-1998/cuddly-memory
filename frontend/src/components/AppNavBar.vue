@@ -24,6 +24,7 @@
             >
                 <b-navbar-nav class="m-auto">
                     <b-nav-item
+                        v-if="['user', 'admin'].includes($store.getters['auth/role'])"
                         :active="routeName==='folders'"
                         :href="$route.path === '/folders/0' ? '#': '/folders/0'"
                     >
@@ -37,11 +38,18 @@
                         <span class="nav-text">Task</span>
                     </b-nav-item>
                     <b-nav-item
-                        v-if="$store.getters['auth/role'] === 'admin'"
+                        v-if="['admin', 'superadmin'].includes($store.getters['auth/role'])"
                         :active="routeName==='user-management'"
                         :href="$route.path === '/user-management' ? '#': '/user-management'"
                     >
                         <span class="nav-text">User</span>
+                    </b-nav-item>
+                    <b-nav-item
+                        v-if="$store.getters['auth/role'] === 'superadmin'"
+                        :active="routeName==='bills'"
+                        :href="$route.path === '/bills' ? '#': '/bills'"
+                    >
+                        <span class="nav-text">Bill</span>
                     </b-nav-item>
                 </b-navbar-nav>
                 <b-navbar-nav>

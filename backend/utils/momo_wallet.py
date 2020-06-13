@@ -15,7 +15,7 @@ order_info = str(uuid.uuid4())
 
 
 def make_request(bill):
-    return_url = f"{settings.VUE_HOST}/bills/{bill.order_id}"
+    return_url = f"{settings.VUE_HOST}/bills"
     notify_url = f"{settings.DJANGO_HOST}/api/bills/notify"
     amount = str(bill.amount)
     order_id = bill.order_id
