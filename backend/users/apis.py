@@ -1,12 +1,3 @@
-'''
-Sign In API
-Detail User API
-Deactivate User API
-Activate user API
-Change Password User API
-User Request Reset Password API
-'''
-
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
