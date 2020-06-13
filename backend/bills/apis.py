@@ -1,11 +1,3 @@
-'''
-Bill list API
-Bill detail API
-Bill make payment API
-Bill notify API
-Created on 12/6/2020
-'''
-
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
