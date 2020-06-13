@@ -1,3 +1,12 @@
+'''
+Sign In API
+Detail User API
+Update User API
+Deactivate User API
+Activate User API
+Change Password User API
+'''
+
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
