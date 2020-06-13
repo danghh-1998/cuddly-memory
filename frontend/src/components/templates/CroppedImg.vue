@@ -103,19 +103,15 @@
                     },
                     {
                         value: 2,
-                        text: "English multiple line"
-                    },
-                    {
-                        value: 3,
-                        text: "Vietnam multiple line"
-                    },
-                    {
-                        value: 4,
                         text: "Digit"
                     },
                     {
-                        value: 5,
+                        value: 3,
                         text: "Checkbox"
+                    },
+                    {
+                        value: 4,
+                        text: "Email"
                     }
                 ],
                 overlayShow: false

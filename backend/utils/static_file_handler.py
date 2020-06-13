@@ -1,5 +1,7 @@
 import os
 import binascii
+import cv2
+import numpy as np
 from PIL import Image
 from io import BytesIO
 import boto3
@@ -24,7 +26,7 @@ def make_thumbnail(file):
     return buffered
 
 
-def extract_zip(file):
+def extract_zip(file, template):
     zip_file = zipfile.ZipFile(file)
     now = str(datetime.now())
     tmp_dir = f"/tmp/{now}"
@@ -36,7 +38,7 @@ def extract_zip(file):
             _, ext = os.path.splitext(tmp_filepath)
             if ext not in settings.IMAGE_TYPES:
                 raise ValidationError("Bad zipfile")
-            encypted_name, _ = file_uploader(image=BytesIO(tmp_file.read()), _type='images')
+            encypted_name, _ = file_uploader(image=BytesIO(tmp_file.read()), _type='images', template=template)
             encypted_names.append(encypted_name)
     shutil.rmtree(tmp_dir)
     return encypted_names, namelist
@@ -74,11 +76,20 @@ def download_s3(path):
         return file.read()
 
 
-def file_uploader(image, _type):
+def file_uploader(image, _type, template=None):
     image_name = None
     if not isinstance(image, BytesIO):
         image_name = image.name
         image = image.file
+    if _type == 'images':
+        reverse_template_image_shape = cv2.imdecode(
+            np.frombuffer(file_downloader(file_name=template.name, _type='templates'), np.uint8), 0).shape[::-1]
+        resized_image = cv2.resize(cv2.imdecode(np.frombuffer(image.read(), np.uint8), -1),
+                                   reverse_template_image_shape,
+                                   interpolation=cv2.INTER_AREA)
+        _, buffer = cv2.imencode('.png', resized_image)
+        image = BytesIO(buffer)
+
     encypted_name = f"{binascii.hexlify(os.urandom(16)).decode()}.png"
     is_production = DJANGO_ENV == 'production'
     image.seek(0)

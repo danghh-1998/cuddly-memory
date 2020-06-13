@@ -83,7 +83,7 @@
         },
         created: function () {
             this.fetchTasks()
-            this.timer = setInterval(this.fetchTasks, 30000)
+            this.timer = setInterval(this.fetchTasks, 1000)
         },
         beforeDestroy() {
             clearInterval(this.timer)

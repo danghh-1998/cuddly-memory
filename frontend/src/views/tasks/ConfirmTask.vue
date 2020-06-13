@@ -57,7 +57,8 @@
             },
             imgSrc: function () {
                 let token = localStorage.getItem('token')
-                return `http://localhost:8000/api/tasks/9/images/${this.currentImage.image}?token=${token}`
+                let taskId = this.$store.getters['tasks/id']
+                return `${process.env.VUE_APP_BASE_URL}/tasks/${taskId}/images/${this.currentImage.image}?token=${token}`
             },
             endImage: function () {
                 return this.images.findIndex(image => {

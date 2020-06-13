@@ -43,7 +43,7 @@
                         :key="boundingBox.id"
                         :bounding-box="boundingBox"
                         :focused="boundingBox.id === focusedId"
-                        @showBoundingBox="showBoundingBox"
+                        @show-bounding-box="showBoundingBox"
                     />
                 </vuescroll>
                 <b-button-group
@@ -135,11 +135,15 @@
             },
             downloadResult: function () {
                 let images = this.$store.getters['tasks/images']
+                let boundingBoxes = this.$store.getters['templates/boundingBoxes']
                 let results = []
                 images.forEach(image => {
                     let data = []
-                    image.results.forEach(result => {
-                        data.push(result.result)
+                    image.results.forEach((result, index) => {
+                        data.push({
+                            context: boundingBoxes[index].context,
+                            result: result.result
+                        })
                     })
                     results.push({
                         image: image.name,
