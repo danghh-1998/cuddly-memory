@@ -16,7 +16,7 @@ class BillListApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Bill
-            exclude = ['deleted', 'order_id']
+            exclude = ['deleted', 'order_id', 'signature', 'client']
 
     def get(self, request):
         self.check_permissions(request=request)
@@ -33,7 +33,7 @@ class BillDetailApi(APIView):
     class ResponseSerializer(serializers.ModelSerializer):
         class Meta:
             model = Bill
-            exclude = ['deleted', 'order_id']
+            exclude = ['deleted', 'order_id', 'signature', 'client']
 
     def get(self, request, bill_id):
         self.check_permissions(request=request)
@@ -48,17 +48,13 @@ class BillDetailApi(APIView):
 class BillMakePaymentApi(APIView):
     permission_classes = (SuperAdminPermission,)
 
-    class ResponseSerializer(serializers.Serializer):
-        pay_url = serializers.CharField()
-
     def post(self, request, bill_id):
         self.check_permissions(request=request)
         bill = get_bills_by(client=request.user.client, id=bill_id).first()
         self.check_object_permissions(request=request, obj=bill)
         pay_url = make_payment(bill)
-        response_serializer = self.ResponseSerializer(pay_url)
         return Response({
-            'pay_url': response_serializer.data
+            'pay_url': pay_url
         }, status=status.HTTP_200_OK)
 
 

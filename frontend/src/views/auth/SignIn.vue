@@ -147,7 +147,17 @@
                                 if (!user.changeInitPassword) {
                                     this.$router.push('/change-init-password')
                                 } else {
-                                    this.$router.push('/folders/0');
+                                    let role = this.$store.getters['auth/role'];
+                                    switch (role) {
+                                        case 'user':
+                                            this.$router.push('/folders/0');
+                                            break;
+                                        case 'admin':
+                                            this.$router.push('/folders/0');
+                                            break;
+                                        case 'superadmin':
+                                            this.$router.push('/bills');
+                                    }
                                 }
                             }
                         })

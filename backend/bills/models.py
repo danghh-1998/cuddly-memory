@@ -22,6 +22,7 @@ class Bill(SafeDeleteModel):
     signature = models.CharField(max_length=255)
     status = models.IntegerField(choices=BILL_STATUSES, default=0)
     client = models.ForeignKey(Client, related_name='bills', on_delete=models.SET_NULL, unique=False, null=True)
+    payment_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

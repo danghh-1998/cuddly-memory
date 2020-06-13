@@ -11,6 +11,7 @@ import TemplateCreate from "@/views/templates/TemplateCreate";
 import Management from "@/views/auth/Management";
 import Task from "@/views/tasks/Task";
 import ConfirmTask from "@/views/tasks/ConfirmTask";
+import Bill from "@/views/bills/Bill"
 
 let routes = [
     {
@@ -120,6 +121,15 @@ let routes = [
             title: 'User management',
             requireRoles: ['admin', 'superadmin']
         }
+    },
+    {
+        path: '/bills',
+        name: 'bills',
+        component: Bill,
+        meta: {
+            title: 'Bill',
+            requireRoles: ['superadmin']
+        }
     }
 ];
 
@@ -139,6 +149,8 @@ router.beforeEach((to, from, next) => {
                 return next('/folders/0');
             case 'admin':
                 return next('/folders/0');
+            case 'superadmin':
+                return next('/bills');
         }
     }
     document.title = to.meta.title

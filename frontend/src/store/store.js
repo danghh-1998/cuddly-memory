@@ -6,6 +6,7 @@ import auth from "@/store/modules/auth/auth";
 import folders from "@/store/modules/folders/folders";
 import templates from "@/store/modules/templates/templates";
 import tasks from "@/store/modules/tasks/tasks";
+import bills from "@/store/modules/bills/bills";
 
 Vue.use(Vuex);
 
@@ -14,7 +15,8 @@ export const store = new Vuex.Store({
         auth,
         folders,
         templates,
-        tasks
+        tasks,
+        bills
     },
     plugins: [createPersistedState({
         key: 'vuex',
