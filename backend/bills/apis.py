@@ -69,11 +69,14 @@ class BillNotifyApi(APIView):
         errorCode = serializers.IntegerField(required=True)
         message = serializers.CharField(required=True)
         responseTime = serializers.CharField(required=True)
-        extraData = serializers.CharField(required=True)
+        extraData = serializers.CharField(required=True, allow_blank=True)
         signature = serializers.CharField(required=True)
 
     def post(self, request):
         request_serializer = self.RequestSerializer(data=request.data)
         validate_serializer(request_serializer)
-        bill = get_bills_by(order_id=request_serializer.validated_data.get('orderId'))
+        bill = get_bills_by(order_id=request_serializer.validated_data.get('orderId')).first()
         submit_payment(bill, **request_serializer.validated_data)
+        return Response({
+
+        }, status=status.HTTP_200_OK)

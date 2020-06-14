@@ -38,7 +38,7 @@ let routes = [
         component: ChangeInitPassword,
         meta: {
             title: 'Change password',
-            requireRoles: ['guest']
+            requireRoles: ['guest', 'user', 'admin', 'superadmin']
         }
     },
     {
