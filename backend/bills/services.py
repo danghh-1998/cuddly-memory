@@ -26,8 +26,6 @@ def make_payment(bill):
 
 
 def submit_payment(bill, **kwargs):
-    if bill.signature != kwargs.get('signature'):
-        raise SignatureError
     if kwargs.get('errorCode') != 0:
         raise PaymentFailed
     bill.status = 1
