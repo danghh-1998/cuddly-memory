@@ -7,5 +7,7 @@ export default {
     },
     subFolders: [],
     templates: [],
-    clipboard: null
+    clipboard: null,
+    filteredFolders: [],
+    filteredTemplates: [],
 }

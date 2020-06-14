@@ -7,5 +7,7 @@ export default {
     templates: state => state.templates,
     templateNames: state => state.templates.map(template => template.displayName),
     clipboard: state => state.clipboard,
-    status: state => state.status
+    status: state => state.status,
+    filteredFolders: state => state.filteredFolders,
+    filteredTemplates: state => state.filteredTemplates
 }

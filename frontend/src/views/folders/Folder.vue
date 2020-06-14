@@ -256,10 +256,10 @@
                 return this.$store.getters['folders/parentFolder']
             },
             subFolders: function () {
-                return this.$store.getters['folders/subFolders']
+                return this.$store.getters['folders/filteredFolders']
             },
             templates: function () {
-                return this.$store.getters['folders/templates']
+                return this.$store.getters['folders/filteredTemplates']
             },
             clipboard: function () {
                 return this.$store.getters['folders/clipboard']
