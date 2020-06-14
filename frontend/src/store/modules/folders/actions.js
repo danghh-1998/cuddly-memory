@@ -91,4 +91,7 @@ export default {
             context.commit('duplicateTemplate', response)
         })
     },
+    handleSearch: (context, payload) => {
+        context.commit('handleSearch', payload)
+    }
 }

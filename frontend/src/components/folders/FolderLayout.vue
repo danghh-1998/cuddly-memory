@@ -3,9 +3,20 @@
         <app-nav-bar class="app-nav-bar" />
         <div class="page-content">
             <global-context-menu
+                v-if="this.$store.getters['auth/role'] === 'admin'"
                 class="global-context-menu"
             />
             <div class="wrapper">
+                <div
+                    class="d-flex align-items-center"
+                >
+                    <b-input
+                        v-model:value="keyword"
+                        placeholder="Search"
+                        class="w-25 ml-auto search-box"
+                        @keyup="handleSearch"
+                    />
+                </div>
                 <div
                     v-if="isNoContent"
                     class="no-content"
@@ -52,8 +63,13 @@
 </template>
 
 <script>
+    import {faSearch} from '@fortawesome/free-solid-svg-icons'
+    import {library} from '@fortawesome/fontawesome-svg-core'
+
     import AppNavBar from "@/components/AppNavBar";
     import GlobalContextMenu from "@/components/folders/GlobalContextMenu";
+
+    library.add(faSearch)
 
     export default {
         name: "FolderLayout",
@@ -61,15 +77,26 @@
             AppNavBar,
             GlobalContextMenu
         },
+        data: function () {
+            return {
+                keyword: ''
+            }
+        },
         computed: {
             isNoFolders: function () {
-                return this.$store.getters['folders/subFolders'].length === 0
+                return this.$store.getters['folders/filteredFolders'].length === 0
             },
             isNoTemplates: function () {
-                return this.$store.getters['folders/templates'].length === 0
+                return this.$store.getters['folders/filteredTemplates'].length === 0
             },
             isNoContent: function () {
                 return this.isNoFolders && this.isNoTemplates
+            }
+        },
+        methods: {
+            handleSearch: function () {
+                console.log(this.keyword);
+                this.$store.dispatch('folders/handleSearch', this.keyword);
             }
         }
     }
@@ -135,5 +162,9 @@
 
     .template-group-title {
         font-size: 24px;
+    }
+
+    .search-box {
+        z-index: 3;
     }
 </style>

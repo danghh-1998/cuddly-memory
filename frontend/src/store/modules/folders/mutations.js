@@ -9,7 +9,9 @@ export default {
             parentFolder: payload.folder.parentFolder,
         };
         state.subFolders = payload.folder.subFolders;
+        state.filteredFolders = state.subFolders;
         state.templates = payload.folder.templates;
+        state.filteredTemplates = state.templates
     },
     copyFolder: (state, payload) => {
         state.clipboard = payload
@@ -75,5 +77,13 @@ export default {
             state.status = ''
             state.templates.push(payload.data.template)
         }
+    },
+    handleSearch: (state, payload) => {
+        state.filteredFolders = state.subFolders.filter(item => {
+            return item.name.includes(payload)
+        })
+        state.filteredTemplates = state.templates.filter(item => {
+            return item.displayName.includes(payload)
+        })
     }
 }
