@@ -96,7 +96,7 @@
                     rail: {},
                     bar: {
                         background: '#888888',
-                        keepShow: false,
+                        keepShow: true,
                     }
                 },
                 focusedId: null,

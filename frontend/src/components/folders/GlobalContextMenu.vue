@@ -99,7 +99,7 @@
             <b-button
                 class="mt-3 mr-3"
                 variant="primary"
-                :disabled="templateName === '' || $store.getters['folders/templates'].includes(templateName)"
+                :disabled="templateName === '' || $store.getters['folders/templateNames'].includes(templateName)"
                 @click="createTemplate"
             >
                 OK
