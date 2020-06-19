@@ -49,4 +49,3 @@ deploy:
     - echo "$PRODUCT_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
   script:
     - echo "${PRODUCT_SERVER_IP}"
-    - ssh -o StrictHostKeyChecking=no deploy@"${PRODUCT_SERVER_IP}" 'bash -s' < scripts/deploy.sh
